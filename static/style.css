@@ -204,6 +204,7 @@ input:checked + .slider:before {
   text-align: center;
   position: absolute;
   bottom: 0;
+  height: auto;
   width: 100%;
 }
 
@@ -270,9 +271,15 @@ input:checked + .slider:before {
 #credit a:hover {
   color: #b3b4bd;
 }
-.socials a:hover {
-  color: rgb(0, 89, 255);
+
+#github:hover {
+color: #b3b4bd;
 }
+
+#linkedin:hover {
+  color: #0077B5;
+}
+
 #follow {
   font-size: 1rem;
 }
