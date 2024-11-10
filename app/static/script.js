@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
           link.classList.add("dark-mode");
           link.classList.remove("light-mode");
         });
-        document.querySelectorAll(".toggle-burger").forEach((burger) => {
+        document.querySelectorAll(".dropdown-menu").forEach((burger) => {
           burger.classList.add("dark-mode");
           burger.classList.remove("light-mode");
         });
@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
           link.classList.add("light-mode");
           link.classList.remove("dark-mode");
         });
-        document.querySelectorAll(".toggle-burger").forEach((burger) => {
+        document.querySelectorAll(".dropdown-menu").forEach((burger) => {
           burger.classList.add("light-mode");
           burger.classList.remove("dark-mode");
         });

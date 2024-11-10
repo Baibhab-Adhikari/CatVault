@@ -118,11 +118,20 @@ body.light-mode .navbar .links a {
 }
 
 .navbar .toggle-burger {
-  color: #141619;
   font-size: 1.5rem;
   cursor: pointer;
   display: none;
 }
+
+
+body.light-mode .navbar .toggle-burger {
+  color: #141619;
+}
+
+body.dark-mode .navbar .toggle-burger {
+  color: #f0f1fa;
+}
+
 
 /* Responsive navbar styles adapted from https://www.youtube.com/watch?v=GdrbE-s5DgQ&t=1s */
 
@@ -137,6 +146,33 @@ body.light-mode .navbar .links a {
     display: block;
   }
 }
+
+.dropdown-menu {
+  position: absolute;
+  right: 2rem;
+  top: 60px;
+  height: 0;
+  width: 300px;
+  background: rgba(225, 225, 225, 0.665);
+  backdrop-filter: blur(20px);
+  border-radius: 10px;
+  overflow: hidden;
+  justify-content: center;
+}
+
+
+.dropdown-menu.open {
+  height: 200px;
+}
+
+.dropdown-menu li {
+  padding: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
 
 /* toggle slider styles from https://uiverse.io/alexruix/splendid-liger-23 */
 /* From Uiverse.io by alexruix */
@@ -273,11 +309,11 @@ input:checked + .slider:before {
 }
 
 #github:hover {
-color: #b3b4bd;
+  color: #b3b4bd;
 }
 
 #linkedin:hover {
-  color: #0077B5;
+  color: #0077b5;
 }
 
 #follow {
@@ -293,5 +329,7 @@ body {
 }
 
 main {
-  flex: 1;
+  /* flex: 1; */
 }
+
+

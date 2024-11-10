@@ -4,7 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CatVault - {% block title %} {% endblock %}</title>
-    <link rel="stylesheet" href="/static/style.css" />
+    <link rel="stylesheet" href="/static/style.css">
+
     <!-- favicon links -->
     <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
     <!-- custom font link -->
@@ -33,7 +34,6 @@
           <li><a href="/manager" class="dark-mode">Manage Passwords</a></li>
           <li><a href="/login" class="dark-mode">Login</a></li>
           <li><a href="/register" class="dark-mode">Register</a></li>
-          <!-- <li><a href="/login">Login</a></li> -->
         </ul>
 
         <!-- toggle switch element from https://uiverse.io/alexruix/splendid-liger-23 -->
@@ -46,13 +46,18 @@
         <div class="toggle-burger dark-mode">
           <i class="fa-solid fa-bars"></i>
         </div>
-        <div class="dropmenu"></div>
+        <div class="dropdown-menu">
+          <li><a href="/generate" class="dark-mode">Generate Passwords</a></li>
+          <li><a href="/manager" class="dark-mode">Manage Passwords</a></li>
+          <li><a href="/login" class="dark-mode">Login</a></li>
+          <li><a href="/register" class="dark-mode">Register</a></li>
+        </div>
       </div>
     </header>
 
     <main>
       <!-- jinja2 for dynamic content generation -->
-      <!-- {% block main %} {% endblock %} -->
+      {% block main %} {% endblock %}
     </main>
 
     <footer class="footer">
@@ -91,9 +96,28 @@
       <p id="creator">
         Made with <i class="fa-solid fa-heart"></i> by Baibhab Adhikari
       </p>
-      <p id="credit">UI Elements from <a href="www.uiverse.io" target="_blank">UI Verse</a> and <a href="https://fontawesome.com/" target="_blank">Font Awesome</a></p>
+      <p id="credit">
+        UI Elements from
+        <a href="www.uiverse.io" target="_blank">UI Verse</a> and
+        <a href="https://fontawesome.com/" target="_blank">Font Awesome</a>
+      </p>
     </footer>
 
     <script src="/static/script.js"></script>
+    <!-- responsive navbar JavaScript code adapted from https://www.youtube.com/watch?v=GdrbE-s5DgQ -->
+    <script>
+      const toggleBtn = document.querySelector(".toggle-burger");
+      const toggleBtnIcon = document.querySelector(".toggle-burger i");
+      const dropDownMenu = document.querySelector(".dropdown-menu");
+
+      toggleBtn.onclick = function () {
+        dropDownMenu.classList.toggle("open");
+        const isOpen = dropDownMenu.classList.contains("open");
+
+        toggleBtnIcon.classList = isOpen
+          ? "fa-solid fa-xmark"
+          : "fa-solid fa-bars";
+      };
+    </script>
   </body>
 </html>

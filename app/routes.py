@@ -1,16 +1,7 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import render_template, redirect, url_for, request, flash, session
+from app import app 
 
-app = Flask(__name__)
 
-
-# homepage route
-
-@app.route('/')
+@app.route("/")
 def index():
-    return render_template("/CatVault/templates/index.html")
-
-# login route
-
-@app.route('/login', methods=["GET", "POST"])
-def login():
-    pass
+    return render_template("index.html")
