@@ -556,9 +556,7 @@ margin-top: 20px;
   font-weight: 600;
 }
 
-.form label .input:valid + span {
-  color: green;
-}
+
 
 .submit {
   border: none;
