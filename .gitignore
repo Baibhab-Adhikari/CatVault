@@ -6,3 +6,4 @@ instance/
 .venv/
 .idea/
 .mypy_cache
+flask_session/
