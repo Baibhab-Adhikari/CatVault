@@ -37,15 +37,6 @@ def check_password(password: str, hashed_password: str) -> bool:
     return bcrypt.check_password_hash(hashed_password, password)
 
 
-# def add_user(first_name, last_name, email, hashed_password):
-#     """Adds new user to the users table in the catvault database"""
-#     # SQLAlchemy ORM functions and methods from docs and chatgpt
-#     user = User(first_name=first_name, last_name=last_name,
-#                     email=email, hashed_password=hashed_password)
-#     db.session.add(user)
-#     db.session.commit()
-#     return user
-
 def check_email(email: str) -> bool:
     """checks if the email is valid"""
     # email validation regex from stackoverflow
