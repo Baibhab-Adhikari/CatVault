@@ -1,0 +1,22 @@
+{% extends 'layout.html' %} {% block title %} Login - CatVault {% endblock %} {%
+block main %}
+<!-- /* From Uiverse.io by nathann09 */  -->
+
+<form class="form">
+  <p class="form-title">Sign in to your account</p>
+  <div class="input-container">
+    <input type="email" placeholder="Enter email" name="email" />
+    <span> </span>
+  </div>
+  <div class="input-container">
+    <input type="password" placeholder="Enter password" name="pasword" />
+  </div>
+  <button type="submit" class="submit">Sign in</button>
+
+  <p class="signup-link">
+    No account?
+    <a href="/register">Create one instead!</a>
+  </p>
+</form>
+
+{% endblock %}
