@@ -116,7 +116,8 @@ def generate() -> Union[str, Response]:
     # for POST
     if request.method == "POST":
 
-        pass
-
+        # variables to store form data
+        range_value = request.form.get("rangevalue")
+        return f"received {range_value}"
     # for GET
     return render_template("generate_password.html")
