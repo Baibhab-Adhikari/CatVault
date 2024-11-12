@@ -3,6 +3,7 @@ from flask import render_template, redirect, session
 from typing import Tuple, Union
 from app import bcrypt
 from functools import wraps
+import secrets
 import re
 
 # adapted from CS50 Finance
@@ -42,3 +43,4 @@ def check_email(email: str) -> bool:
     # email validation regex from stackoverflow
     email_regex = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
     return re.match(email_regex, email) is not None
+

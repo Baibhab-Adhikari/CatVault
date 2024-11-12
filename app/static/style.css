@@ -216,12 +216,12 @@ body.dark-mode .navbar .toggle-burger {
 }
 
 input:checked + .slider {
-  background-color: #141619;
+  background-color: #093474;
 }
 
 input:checked + .slider:before {
   transform: translateX(100%);
-  background-color: #141619;
+  background-color: #093474;
   box-shadow: inset 8px -4px 0px 0px #fff000;
 }
 
@@ -351,7 +351,7 @@ main {
   width: 100vw;
   margin: 0;
   height: auto;
-  max-height: 60vh; /* Adjust this to fit your layout */
+  max-height: 60vh;
   object-fit: cover;
   overflow: hidden;
   text-align: center;
@@ -365,17 +365,13 @@ main {
 }
 
 .herotext {
-
-text-align: center;
-align-items: center;
+  text-align: center;
+  align-items: center;
 }
-
-
 
 /* getstarted getstarted.getstarted styles from https://uiverse.io/adeladel522/giant-earwig-69 */
 
-
-/* From Uiverse.io by adeladel522 */ 
+/* From Uiverse.io by adeladel522 */
 .getstarted {
   position: relative;
   transition: all 0.3s ease-in-out;
@@ -446,16 +442,15 @@ align-items: center;
   }
 }
 
-
 .container-btn {
   display: flex;
-justify-content: center;
-margin-top: 20px;
+  justify-content: center;
+  margin-top: 20px;
 }
 
 /* registration form styles */
 
-/* From Uiverse.io by Yaya12085 */ 
+/* From Uiverse.io by Yaya12085 */
 .form {
   display: flex;
   flex-direction: column;
@@ -478,7 +473,8 @@ margin-top: 20px;
   padding-left: 30px;
 }
 
-.title::before,.title::after {
+.title::before,
+.title::after {
   position: absolute;
   content: "";
   height: 16px;
@@ -500,7 +496,8 @@ margin-top: 20px;
   animation: pulse 1s linear infinite;
 }
 
-.message, .signin {
+.message,
+.signin {
   color: rgba(88, 87, 87, 0.822);
   font-size: 14px;
 }
@@ -550,13 +547,12 @@ margin-top: 20px;
   font-size: 0.9em;
 }
 
-.form label .input:focus + span,.form label .input:valid + span {
+.form label .input:focus + span,
+.form label .input:valid + span {
   top: 30px;
   font-size: 0.7em;
   font-weight: 600;
 }
-
-
 
 .submit {
   border: none;
@@ -566,7 +562,7 @@ margin-top: 20px;
   border-radius: 10px;
   color: #fff;
   font-size: 16px;
-  transform: .3s ease;
+  transform: 0.3s ease;
 }
 
 .submit:hover {
@@ -585,16 +581,15 @@ margin-top: 20px;
   }
 }
 
-
-
-/* From Uiverse.io by nathann09 */ 
+/* From Uiverse.io by nathann09 */
 .form {
   background-color: var(--color-dark);
   display: block;
   padding: 1rem;
   max-width: 350px;
   border-radius: 0.5rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 .form-title {
@@ -609,7 +604,8 @@ margin-top: 20px;
   position: relative;
 }
 
-.input-container input, .form button {
+.input-container input,
+.form button {
   outline: none;
   border: 1px solid #e5e7eb;
   margin: 8px 0;
@@ -643,7 +639,7 @@ margin-top: 20px;
 }
 
 .signup-link {
-  color: #6B7280;
+  color: #6b7280;
   font-size: 0.875rem;
   line-height: 1.25rem;
   text-align: center;
@@ -654,3 +650,141 @@ margin-top: 20px;
   color: var(--color-light);
 }
 
+/* password generator input form styles and range slider */
+
+#generator-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 50vw;
+  background-color: var(--color-dark);
+  padding: 20px;
+  border-radius: 20px;
+  position: relative;
+}
+
+#generator-form h3 {
+  color: #141619;
+  text-align: center;
+}
+
+#heading-text {
+  margin-bottom: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* From Uiverse.io by Gautammsharma */
+.material-checkbox {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  color: #141619;
+  cursor: pointer;
+}
+
+.material-checkbox input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.checkmark {
+  position: relative;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-right: 12px;
+  border: 2px solid #141619;
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+
+.material-checkbox input[type="checkbox"]:checked ~ .checkmark {
+  background-color: #0a21c0;
+  border-color: #0077b5;
+}
+
+.material-checkbox input[type="checkbox"]:checked ~ .checkmark:after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 6px;
+  width: 4px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.material-checkbox input[type="checkbox"]:focus ~ .checkmark {
+  box-shadow: 0 0 0 2px #39393865;
+}
+
+.material-checkbox:hover input[type="checkbox"] ~ .checkmark {
+  border-color: skyblue;
+}
+
+.material-checkbox input[type="checkbox"]:disabled ~ .checkmark {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.material-checkbox input[type="checkbox"]:disabled ~ .checkmark:hover {
+  border-color: #4d4d4d;
+}
+
+#generate {
+  border: none;
+  outline: none;
+  background-color: var(--color-light);
+  padding: 10px;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 16px;
+  /* transform: 0.3s ease; */
+}
+
+#generate:hover {
+  background-color: rgb(56, 90, 194);
+}
+
+#output {
+  width: 80%;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #f0f1fa;
+  color: #141619;
+}
+
+#range-wrapper p {
+  text-align: center;
+  color: #141619;
+  font-weight: 500;
+}
+
+#range-wrapper input[type="range"] {
+  width: 80%;
+  height: auto;
+  cursor: pointer;
+  outline: none;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.range-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+#checkbox-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}

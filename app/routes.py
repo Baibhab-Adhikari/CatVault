@@ -105,3 +105,18 @@ def login() -> Union[Tuple[str, int], Response]:
     # for GET
 
     return render_template("login.html")  # type: ignore
+
+
+# password generator route
+
+@app.route("/generate", methods=["GET", "POST"])
+def generate() -> Union[str, Response]:
+    """Generates a random password"""
+
+    # for POST
+    if request.method == "POST":
+
+        pass
+
+    # for GET
+    return render_template("generate_password.html")

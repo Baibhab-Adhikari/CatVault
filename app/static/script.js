@@ -36,3 +36,9 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   });
+
+// js code for the range slider
+
+function rangeSlider(value) {
+  document.getElementById('range-val').innerHTML = value;
+}
