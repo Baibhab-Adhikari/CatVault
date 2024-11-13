@@ -1,9 +1,31 @@
+# Ignore environment variables file
 .env
+
+# Ignore Python cache files
 __pycache__
 *.pyc
 *.pyo
+
+# Ignore instance folder
 instance/
+
+# Ignore virtual environment folder
 .venv/
+
+# Ignore IDE configuration files
 .idea/
+
+# Ignore mypy cache
 .mypy_cache
+
+# Ignore Flask session files
 flask_session/
+
+# Ignore database folder and its contents
+database/
+database/*.db
+database/*.sql
+
+# Ignore any .db and .sql files in the root directory
+*.db
+*.sql
