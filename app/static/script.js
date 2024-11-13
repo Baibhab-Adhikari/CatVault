@@ -3,17 +3,28 @@
 document.addEventListener("DOMContentLoaded", function () {
   const themeToggle = document.getElementById("theme-toggle");
 
-  // Set the initial state of the toggle based on the body class
-  if (document.body.classList.contains("dark-mode")) {
+  // Load the user's theme preference from localStorage
+  const userTheme = localStorage.getItem("theme");
+
+  if (userTheme === "dark") {
+    document.body.classList.add("dark-mode");
+    document.body.classList.remove("light-mode");
     themeToggle.checked = true;
-  } else {
+  } else if (userTheme === "light") {
+    document.body.classList.add("light-mode");
+    document.body.classList.remove("dark-mode");
     themeToggle.checked = false;
+  } else {
+    // Default to dark mode if no preference is set
+    document.body.classList.add("dark-mode");
+    themeToggle.checked = true;
   }
 
   themeToggle.addEventListener("change", function () {
     if (this.checked) {
       document.body.classList.add("dark-mode");
       document.body.classList.remove("light-mode");
+      localStorage.setItem("theme", "dark");
       document.querySelectorAll("a").forEach((link) => {
         link.classList.add("dark-mode");
         link.classList.remove("light-mode");
@@ -25,6 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
     } else {
       document.body.classList.add("light-mode");
       document.body.classList.remove("dark-mode");
+      localStorage.setItem("theme", "light");
       document.querySelectorAll("a").forEach((link) => {
         link.classList.add("light-mode");
         link.classList.remove("dark-mode");
@@ -35,6 +47,13 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
   });
+  // Hide flash messages after 2.5 seconds
+  const flashMessages = document.getElementById("flash-messages");
+  if (flashMessages) {
+    setTimeout(() => {
+      flashMessages.style.display = "none";
+    }, 2500);
+  }
 });
 
 // js code for the range slider
@@ -67,4 +86,3 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   });
 });
-

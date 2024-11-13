@@ -65,7 +65,7 @@
     </header>
 
     {% if get_flashed_messages() %}
-    <div class="flashes">
+    <div class="flashes" id="flash-messages">
       <p>{{ get_flashed_messages() | join(" ") }}</p>
     </div>
     {% endif %}

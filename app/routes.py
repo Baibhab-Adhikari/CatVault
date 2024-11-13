@@ -100,7 +100,7 @@ def login() -> Union[Tuple[str, int], Response]:
 
         session["user_id"] = user[0]["id"]  # store user in the session
 
-        flash("You have been logged in.")  # flash user to update them
+        flash("You have been logged in!")  # flash user to update them
 
         return redirect("/")  # type: ignore
 
