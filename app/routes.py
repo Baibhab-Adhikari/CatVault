@@ -70,9 +70,6 @@ def register() -> Union[str, tuple[str, int], Response]:
 @app.route("/login", methods=["GET", "POST"])
 def login() -> Union[Tuple[str, int], Response]:
 
-    # check if the user is already logged out
-    logged_out = session.pop("logged_out", None)
-
     # for POST
     if request.method == "POST":
 
@@ -146,3 +143,11 @@ def logout() -> Response:
     session.clear()
     flash("You have been logged out.")  # flash user to update them
     return redirect("/login")  # type: ignore
+
+
+# route for password manager
+
+@app.route("/manager")
+@login_required
+def manager():
+    """Enables the user to manage their passwords"""
