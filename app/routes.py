@@ -1,7 +1,7 @@
 from flask import render_template, request, redirect, session, jsonify, flash
 from flask.wrappers import Response
 from typing import Union, Tuple
-from app.helpers import apology, login_required, hash_password, check_password, check_email, generate_password  # type: ignore
+from app.helpers import apology, login_required, hash_password, check_password, check_email, generate_password, encrypt_password, decrypt_password  # type: ignore
 from app import app, db
 
 
@@ -147,7 +147,79 @@ def logout() -> Response:
 
 # route for password manager
 
-@app.route("/manager")
+@app.route("/manager", methods=["GET", "POST"])
 @login_required
 def manager():
     """Enables the user to manage their passwords"""
+
+    user_email = db.execute(
+        "SELECT email FROM users WHERE id = ?", session["user_id"])
+    user_email = user_email[0]["email"]
+    
+    # for POST
+    if request.method == "POST":
+        # check for user action:
+
+        # for adding password
+        if 'add' in request.form:
+
+            # variables to store form data
+            website = request.form.get("website")
+            username = request.form.get("username")
+            password = request.form.get("password")
+            encrypted_pw = encrypt_password(password)
+
+            # store the password in the database
+            try:
+                db.execute("INSERT INTO manager (user_email, website, username, password) VALUES (?, ?, ?, ?)",
+                           user_email, website, username, encrypted_pw)
+            except Exception as e:
+                return apology(str(e), 400)
+
+            flash("Password added successfully!")
+            # for editing password
+        elif 'edit' in request.form:
+
+            password_id = request.form.get("id")
+            new_password = request.form.get("password")
+
+            new_encrypted_pw = encrypt_password(new_password)
+
+            # update the password in the database
+            try:
+                db.execute("UPDATE manager SET password = ? WHERE id = ? AND user_email = ?",
+                           new_encrypted_pw, password_id, user_email)
+            except Exception as e:
+                return apology(str(e), 400)
+
+            flash("Password updated successfully!")
+        # for deleting password
+        elif 'delete' in request.form:
+            password_id = request.form.get("id")
+
+            # delete the password from the database
+            try:
+                db.execute("DELETE FROM manager WHERE id = ? AND user_email = ?",
+                           password_id, user_email)
+            except Exception as e:
+                return apology(str(e), 400)
+
+            flash("Password deleted successfully!")
+
+    # fetch the user's passwords from the database (GET)
+
+    data = db.execute(
+        "SELECT id, website, username, password FROM manager WHERE user_email = ?", user_email)
+
+    decrypted_passwords_list = []  # empty list to store decrypted passwords
+
+    for row in data:
+        decrypted_password = decrypt_password(row['password'])
+        decrypted_passwords_list.append({
+            'id': row['id'],
+            'website': row['website'],
+            'username': row['username'],
+            'password': decrypted_password
+        })
+
+    return render_template("manage_password.html", passwords=decrypted_passwords_list)

@@ -6,6 +6,7 @@ from functools import wraps
 import secrets
 import string
 import re
+from . import cipher_suite  # type: ignore
 
 # adapted from CS50 Finance
 
@@ -65,3 +66,13 @@ def generate_password(length, uppercase, lowercase, numbers, symbols) -> str:
         characters_pool = string.ascii_letters + string.digits + string.punctuation
 
     return "".join(secrets.choice(characters_pool) for _ in range(int(length)))
+
+# password encryption advice from copilot for the password manager route
+
+def encrypt_password(password: str) -> str:
+    """encrypts the password"""
+    return cipher_suite.encrypt(password.encode('utf-8')).decode('utf-8')
+
+def decrypt_password(encrypted_password: str) -> str:
+    """decrypts the password"""
+    return cipher_suite.decrypt(encrypted_password.encode('utf-8')).decode('utf-8')
