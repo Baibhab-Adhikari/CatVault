@@ -45,6 +45,23 @@ def check_email(email: str) -> bool:
     email_regex = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
     return re.match(email_regex, email) is not None
 
-# def generate_password(length: int = 12) -> str:
-    """generates a random password"""
-    
+
+def generate_password(length, uppercase, lowercase, numbers, symbols) -> str:
+    """generates a random password based on client side input"""
+    # password generation adapted from stackoverflow and secrets docs
+    characters_pool = ""
+    # check for user specifications
+    if uppercase == 'on':
+        characters_pool += string.ascii_uppercase
+    if lowercase == 'on':
+        characters_pool += string.ascii_lowercase
+    if numbers == 'on':
+        characters_pool += string.digits
+    if symbols == 'on':
+        characters_pool += string.punctuation
+
+    # If no checkboxes are checked, provide a default random password (copilot)
+    if not characters_pool:
+        characters_pool = string.ascii_letters + string.digits + string.punctuation
+
+    return "".join(secrets.choice(characters_pool) for _ in range(int(length)))

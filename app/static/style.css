@@ -657,6 +657,7 @@ main {
   flex-direction: column;
   gap: 10px;
   width: 50vw;
+  height: 50%;
   background-color: var(--color-dark);
   padding: 20px;
   border-radius: 20px;
@@ -744,7 +745,6 @@ main {
   border-radius: 10px;
   color: #fff;
   font-size: 16px;
-  /* transform: 0.3s ease; */
 }
 
 #generate:hover {
@@ -787,4 +787,16 @@ main {
   justify-content: center;
   align-items: center;
   gap: 10px;
+}
+
+body.dark-mode .flashes p {
+  color: #f0f1fa;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+body.light-mode .flashes p {
+  color: #141619;
+  font-size: 1.2rem;
+  text-align: center;
 }

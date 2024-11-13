@@ -1,7 +1,7 @@
-from flask import render_template, request, redirect, Response, session
+from flask import render_template, request, redirect, session, jsonify, flash
 from flask.wrappers import Response
 from typing import Union, Tuple
-from app.helpers import apology, login_required, hash_password, check_password, check_email  # type: ignore
+from app.helpers import apology, login_required, hash_password, check_password, check_email, generate_password  # type: ignore
 from app import app, db
 
 
@@ -70,8 +70,8 @@ def register() -> Union[str, tuple[str, int], Response]:
 @app.route("/login", methods=["GET", "POST"])
 def login() -> Union[Tuple[str, int], Response]:
 
-    # remove session id
-    session.clear()
+    # check if the user is already logged out
+    logged_out = session.pop("logged_out", None)
 
     # for POST
     if request.method == "POST":
@@ -100,6 +100,8 @@ def login() -> Union[Tuple[str, int], Response]:
 
         session["user_id"] = user[0]["id"]  # store user in the session
 
+        flash("You have been logged in.")  # flash user to update them
+
         return redirect("/")  # type: ignore
 
     # for GET
@@ -108,16 +110,39 @@ def login() -> Union[Tuple[str, int], Response]:
 
 
 # password generator route
-
 @app.route("/generate", methods=["GET", "POST"])
-def generate() -> Union[str, Response]:
+@login_required
+def generate() -> Union[str, Response, Tuple[str, int]]:
     """Generates a random password"""
 
     # for POST
     if request.method == "POST":
-
         # variables to store form data
-        range_value = request.form.get("rangevalue")
-        return f"received {range_value}"
+
+        length = request.form.get("rangevalue")
+        uppercase = request.form.get("uppercase")
+        lowercase = request.form.get("lowercase")
+        numbers = request.form.get("numbers")
+        symbols = request.form.get("symbols")
+
+        # generate the password based on the user specification
+
+        generated_password = generate_password(
+            length, uppercase, lowercase, numbers, symbols)
+
+        # return the password as a json response to the client
+        return jsonify(password=generated_password)
+
     # for GET
     return render_template("generate_password.html")
+
+# logout route
+
+
+@app.route("/logout")
+@login_required
+def logout() -> Response:
+    """Logs out the user"""
+    session.clear()
+    flash("You have been logged out.")  # flash user to update them
+    return redirect("/login")  # type: ignore
