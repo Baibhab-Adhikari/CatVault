@@ -1,0 +1,9 @@
+* {
+  font-family: "Poppins", sans-serif;
+}
+
+/* linkedin icon hover styles */
+
+#linkedin i:hover {
+  color: #0077b5;
+}

@@ -24,6 +24,13 @@
 
 /* body styles*/
 
+body {
+  overflow-y: auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 body.light-mode {
   --color: var(--color-light);
   --color2: var(--color2-light);
@@ -228,6 +235,9 @@ input:checked + .slider:before {
 /* footer styles  - adapted from copilot*/
 
 /* Footer styles */
+footer {
+  flex-shrink: 0;
+}
 .footer {
   background-color: var(--color3-dark); /* Background color for the footer */
   color: white; /* Text color for the footer */
@@ -652,17 +662,37 @@ main {
 
 /* password generator input form styles and range slider */
 
-#generator-form {
+body.light-mode #generator-form {
   display: flex;
   flex-direction: column;
   gap: 10px;
   width: 50vw;
-  height: 50%;
+  /* height: 50%; */
   background-color: var(--color-dark);
   padding: 20px;
+  border: 2px solid #141619;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
   border-radius: 20px;
   position: relative;
 }
+
+body.dark-mode #generator-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 50vw;
+  /* height: 50%; */
+  background-color: var(--color-dark);
+  padding: 20px;
+  border: 2px solid #f0f1fa;
+  box-shadow: 0 10px 15px -3px rgba(226, 226, 226, 0.745),
+    0 4px 6px -2px rgba(255, 255, 255, 0.436);
+  border-radius: 20px;
+  position: relative;
+}
+
+
 
 #generator-form h3 {
   color: #141619;
@@ -737,6 +767,8 @@ main {
   border-color: #4d4d4d;
 }
 
+/*generate button styles in the password generator form */
+
 #generate {
   border: none;
   outline: none;
@@ -751,6 +783,19 @@ main {
   background-color: rgb(56, 90, 194);
 }
 
+#copy {
+  border: none;
+  outline: none;
+  background-color: var(--color-light);
+  padding: 10px;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 16px;
+}
+
+#copy:hover {
+  background-color: rgb(56, 90, 194);
+}
 #output {
   width: 80%;
   gap: 10px;
@@ -800,3 +845,4 @@ body.light-mode .flashes p {
   font-size: 1.2rem;
   text-align: center;
 }
+
