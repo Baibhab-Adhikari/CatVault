@@ -14,7 +14,6 @@ def page_not_found(e):
 @app.route("/")
 def index() -> str:
     """renders the home page"""
-    logged_in = "user_id" in session  # bool flag to check if user is logged in
     return render_template("index.html")
 
 
