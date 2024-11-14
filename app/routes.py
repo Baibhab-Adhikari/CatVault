@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, session, jsonify, flash
+from flask import render_template, request, redirect, session, jsonify, flash, url_for
 from flask.wrappers import Response
 from typing import Union, Tuple
 from app.helpers import apology, login_required, hash_password, check_password, check_email, generate_password, encrypt_password, decrypt_password  # type: ignore
@@ -155,7 +155,7 @@ def manager():
     user_email = db.execute(
         "SELECT email FROM users WHERE id = ?", session["user_id"])
     user_email = user_email[0]["email"]
-    
+
     # for POST
     if request.method == "POST":
         # check for user action:
@@ -177,6 +177,7 @@ def manager():
                 return apology(str(e), 400)
 
             flash("Password added successfully!")
+            return redirect(url_for('manager'))
             # for editing password
         elif 'edit' in request.form:
 
@@ -193,6 +194,7 @@ def manager():
                 return apology(str(e), 400)
 
             flash("Password updated successfully!")
+            return redirect(url_for('manager'))
         # for deleting password
         elif 'delete' in request.form:
             password_id = request.form.get("id")
@@ -205,6 +207,7 @@ def manager():
                 return apology(str(e), 400)
 
             flash("Password deleted successfully!")
+            return redirect(url_for("manager"))  # Redirect to avoid form resubmission
 
     # fetch the user's passwords from the database (GET)
 
