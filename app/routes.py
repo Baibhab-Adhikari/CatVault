@@ -59,8 +59,8 @@ def register() -> Union[str, tuple[str, int], Response]:
         try:
             db.execute("INSERT INTO users (first_name, last_name, email, hashed_password) VALUES (?, ?, ?, ?)",
                        first_name, last_name, email, hash)
-        except Exception as e:
-            return apology(str(e), 400)
+        except:
+            return apology("Email already in use!!", 400)
 
     return redirect("/login")  # type: ignore
 
@@ -207,7 +207,8 @@ def manager():
                 return apology(str(e), 400)
 
             flash("Password deleted successfully!")
-            return redirect(url_for("manager"))  # Redirect to avoid form resubmission
+            # Redirect to avoid form resubmission
+            return redirect(url_for("manager"))
 
     # fetch the user's passwords from the database (GET)
 
