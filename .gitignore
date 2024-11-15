@@ -29,3 +29,5 @@ database/*.sql
 # Ignore any .db and .sql files in the root directory
 *.db
 *.sql
+
+.DS_Store
