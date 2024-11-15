@@ -346,7 +346,7 @@ main {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: calc(100vh - 60px);
+  min-height: calc(100vh - 50px);
   overflow: hidden;
 }
 
@@ -401,6 +401,7 @@ main {
   outline: none;
   overflow: hidden;
   font-size: 15px;
+  margin-bottom: 30px;
 }
 
 .icon {
@@ -455,7 +456,7 @@ main {
 .container-btn {
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 /* registration form styles */
@@ -468,8 +469,16 @@ main {
   max-width: 350px;
   background-color: var(--color-dark);
   padding: 20px;
+  border: 1px solid #141619;
   border-radius: 20px;
   position: relative;
+  box-shadow: 0 10px 15px -3px rgba(30, 30, 30, 0.745),
+    0 4px 6px -2px rgba(37, 37, 37, 0.436);
+}
+
+body.dark-mode .form {
+  box-shadow: 0 10px 15px -3px rgba(226, 226, 226, 0.745),
+    0 4px 6px -2px rgba(255, 255, 255, 0.436);
 }
 
 .title {
@@ -666,11 +675,11 @@ body.light-mode #generator-form {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  width: 50vw;
-  /* height: 50%; */
+  width: 70vw;
+  height: auto;
   background-color: var(--color-dark);
   padding: 20px;
-  border: 2px solid #141619;
+  border: 1px solid #141619;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2),
     0 4px 6px -2px rgba(0, 0, 0, 0.05);
   border-radius: 20px;
@@ -681,18 +690,16 @@ body.dark-mode #generator-form {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  width: 50vw;
-  /* height: 50%; */
+  width: 70vw;
+  height: auto;
   background-color: var(--color-dark);
   padding: 20px;
-  border: 2px solid #f0f1fa;
+  border: 1px solid #f0f1fa;
   box-shadow: 0 10px 15px -3px rgba(226, 226, 226, 0.745),
     0 4px 6px -2px rgba(255, 255, 255, 0.436);
   border-radius: 20px;
   position: relative;
 }
-
-
 
 #generator-form h3 {
   color: #141619;
@@ -834,6 +841,25 @@ body.dark-mode #generator-form {
   gap: 10px;
 }
 
+@media (max-width: 992px) {
+  #checkbox-wrapper {
+    flex-direction: column;
+  }
+  #generate,
+  #copy {
+    width: 80%;
+    padding: 5px;
+  }
+  #output-box {
+    align-items: center;
+    width: 100%;
+    margin-left: 25px;
+  }
+  #heading-text {
+    text-align: center;
+  }
+}
+
 body.dark-mode .flashes p {
   color: #f0f1fa;
   font-size: 1.2rem;
@@ -845,4 +871,3 @@ body.light-mode .flashes p {
   font-size: 1.2rem;
   text-align: center;
 }
-
