@@ -6,9 +6,7 @@ from functools import wraps
 import secrets
 import string
 import re
-from . import cipher_suite  # type: ignore
-
-# adapted from CS50 Finance
+from app import cipher_suite
 
 
 def apology(message: str, code: int = 400) -> Tuple[str, int]:
@@ -16,7 +14,7 @@ def apology(message: str, code: int = 400) -> Tuple[str, int]:
     return render_template("apology.html", message=message, code=code), code
 
 
-# adapted from CS50 Finance
+# login required decorator
 def login_required(f):
     """ decoration of routes to enforce login for the user"""
     @wraps(f)
@@ -67,11 +65,13 @@ def generate_password(length, uppercase, lowercase, numbers, symbols) -> str:
 
     return "".join(secrets.choice(characters_pool) for _ in range(int(length)))
 
-# password encryption advice from copilot for the password manager route
+# password encryption for the password manager route
+
 
 def encrypt_password(password: str) -> str:
     """encrypts the password"""
-    return cipher_suite.encrypt(password.encode('utf-8')).decode('utf-8')
+    return cipher_suite.encrypt(password.encode('utf-8')).decode('utf-8')  # type: ignore
+
 
 def decrypt_password(encrypted_password: str) -> str:
     """decrypts the password"""

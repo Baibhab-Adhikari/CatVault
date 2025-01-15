@@ -4,8 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %} {% endblock %}</title>
-    <link rel="stylesheet" href="/static/style.css" />
-
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
     <!-- favicon links -->
     <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
     {% block head %} {% endblock %}
@@ -23,112 +26,7 @@
       referrerpolicy="no-referrer"
     />
   </head>
-  <body class="dark-mode">
-    <!-- responsive navbar design and code adapted from https://youtu.be/GdrbE-s5DgQ -->
-    <header>
-      <div class="navbar">
-        <div class="logo">
-          <a href="/"> CatVault </a>
-        </div>
-
-        <ul class="links">
-          <li><a href="/generate" class="dark-mode">Generate Passwords</a></li>
-          <li><a href="/manager" class="dark-mode">Manage Passwords</a></li>
-          <li><a href="/login" class="dark-mode">Login</a></li>
-          <li><a href="/logout" class="dark-mode">Logout</a></li>
-          <li><a href="/register" class="dark-mode">Register</a></li>
-        </ul>
-
-        <!-- toggle switch element from https://uiverse.io/alexruix/splendid-liger-23 -->
-        <!-- /* From Uiverse.io by alexruix */  -->
-        <label class="switch">
-          <input type="checkbox" id="theme-toggle" />
-          <span class="slider"></span>
-        </label>
-
-        <div class="toggle-burger dark-mode">
-          <i class="fa-solid fa-bars"></i>
-        </div>
-        <div class="dropdown-menu">
-          <li><a href="/generate" class="dark-mode">Generate Passwords</a></li>
-          <li><a href="/manager" class="dark-mode">Manage Passwords</a></li>
-          <li><a href="/login" class="dark-mode">Login</a></li>
-          <li><a href="/logout" class="dark-mode">Logout</a></li>
-          <li><a href="/register" class="dark-mode">Register</a></li>
-        </div>
-      </div>
-    </header>
-
-    {% if get_flashed_messages() %}
-    <div class="flashes" id="flash-messages">
-      <p>{{ get_flashed_messages() | join(" ") }}</p>
-    </div>
-    {% endif %}
-
-    <main>
-      <!-- jinja2 for dynamic content generation -->
-      {% block main %} {% endblock %}
-    </main>
-
-    <footer class="footer">
-      <div class="socials">
-        <p id="follow">Follow me on:</p>
-        <ul>
-          <li>
-            <a
-              href="https://github.com/Baibhab-Adhikari"
-              id="github"
-              target="_blank"
-              ><i class="fa-brands fa-github"></i
-            ></a>
-          </li>
-          <li>
-            <a
-              href="https://www.linkedin.com/in/baibhab-adhikari-3380bb297/"
-              id="linkedin"
-              target="_blank"
-              ><i class="fa-brands fa-linkedin"></i
-            ></a>
-          </li>
-        </ul>
-        <p id="quick">Quick Links:</p>
-        <div id="footer-links">
-          <ul>
-            <li>
-              <a href="/generate">Generate Passwords</a>
-              <a href="/manager">Manage Passwords</a>
-              <a href="/login">Login</a>
-              <a href="/logout" class="dark-mode">Logout</a>
-              <a href="/register">Register</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <p id="creator">
-        Made with <i class="fa-solid fa-heart"></i> by Baibhab Adhikari
-      </p>
-      <p id="credit">
-        UI Elements from
-        <a href="www.uiverse.io" target="_blank">UI Verse</a> and
-        <a href="https://fontawesome.com/" target="_blank">Font Awesome</a>
-      </p>
-    </footer>
-
-    <script src="/static/script.js"></script>
-    <!-- responsive navbar JavaScript code adapted from https://www.youtube.com/watch?v=GdrbE-s5DgQ -->
-    <script>
-      const toggleBtn = document.querySelector(".toggle-burger");
-      const toggleBtnIcon = document.querySelector(".toggle-burger i");
-      const dropDownMenu = document.querySelector(".dropdown-menu");
-
-      toggleBtn.onclick = function () {
-        dropDownMenu.classList.toggle("open");
-        const isOpen = dropDownMenu.classList.contains("open");
-
-        toggleBtnIcon.classList = isOpen
-          ? "fa-solid fa-xmark"
-          : "fa-solid fa-bars";
-      };
-    </script>
+  <body>
+    
   </body>
 </html>

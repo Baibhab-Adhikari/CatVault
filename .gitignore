@@ -11,6 +11,7 @@ instance/
 
 # Ignore virtual environment folder
 .venv/
+venv/
 
 # Ignore IDE configuration files
 .idea/
@@ -31,3 +32,5 @@ database/*.sql
 *.sql
 
 .DS_Store
+
+

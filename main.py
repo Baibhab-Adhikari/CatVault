@@ -1,6 +1,8 @@
-from app import app
+from app import create_app
+from flask import Flask
 
+flask_app: Flask = create_app()
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    flask_app.run(debug=flask_app.config["DEBUG"])
