@@ -1,7 +1,6 @@
-from app import db
 from sqlalchemy.sql import func
 
-# db = SQLAlchemy()
+from app import db
 
 
 class Users(db.Model):  # type: ignore
