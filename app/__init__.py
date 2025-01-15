@@ -1,8 +1,7 @@
 import os
 
-from dotenv import load_dotenv
-
 from cryptography.fernet import Fernet  # type: ignore
+from dotenv import load_dotenv
 from flask import Flask
 from flask_bcrypt import Bcrypt  # type: ignore
 from flask_mail import Mail  # type: ignore
@@ -20,7 +19,6 @@ db: SQLAlchemy = SQLAlchemy()
 session: Session = Session()
 mail: Mail = Mail()
 migrate: Migrate = Migrate()
-# key = "Shr6Eew2IjVx0QHRAWZGxHhn3n9RRwr6Ns_fgyXQuAs="
 KEY = os.getenv("ENCRYPTION_KEY")
 cipher_suite = Fernet(KEY.encode())
 
