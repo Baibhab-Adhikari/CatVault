@@ -20,7 +20,7 @@ session: Session = Session()
 mail: Mail = Mail()
 migrate: Migrate = Migrate()
 KEY = os.getenv("ENCRYPTION_KEY")
-cipher_suite = Fernet(KEY.encode())
+cipher_suite = Fernet(KEY.encode())  # type: ignore
 
 
 def create_app() -> Flask:

@@ -1,9 +1,12 @@
+from typing import Union, Tuple
+
 from flask import render_template, request, redirect, session, jsonify, flash, url_for
 from flask.wrappers import Response
-from typing import Union, Tuple
-from app.helpers import apology, login_required, hash_password, check_password, check_email, generate_password, encrypt_password, decrypt_password  # type: ignore
 from flask_mail import Message  # type: ignore
+
 from app import mail  # type: ignore
+from app.helpers import apology, login_required, hash_password, check_password, check_email, generate_password, \
+    encrypt_password, decrypt_password  # type: ignore
 
 
 def register_routes(app, db):
