@@ -1,32 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>{% block title %} {% endblock %}</title>
     <!-- Bootstrap CSS -->
     <link
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-      rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+            rel="stylesheet"
     />
     <!-- favicon links -->
-    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg"/>
     {% block head %} {% endblock %}
 
     <!-- custom font link -->
     <style>
-      @import url("https://fonts.googleapis.com/css2?family=M+PLUS+1:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+        @import url("https://fonts.googleapis.com/css2?family=M+PLUS+1:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
     </style>
     <!-- fontawesome for svg icons  -->
     <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+            integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
     />
-  </head>
-  <body>
-    
-  </body>
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+        }
+
+        .hero-section {
+            background-image: url("app/static/cat1-hero.jpg");
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 100px 0;
+        }
+
+        .navbar {
+            background-color: #333;
+        }
+
+        .navbar a {
+            color: white;
+        }
+
+        .footer {
+            background-color: #333;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="/">CatVault</a>
+        <button
+                class="navbar-toggler"
+                type="button"
+                data-toggle="collapse"
+                data-target="#navbarNav"
+                aria-controls="navbarNav"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/generate">Generate Passwords</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/manager">Manage Passwords</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/contactus">Contact</a>
+                </li><li class="nav-item">
+                    <a class="nav-link" href="/account">Account</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- flask flash-messages -->
+
+{% if get_flashed_messages() %}
+    <div class="flashes" id="flash-messages">
+        <p>{{ get_flashed_messages() | join(" ") }}</p>
+    </div>
+{% endif %}
+
+<!-- Main Content -->
+<main>{% block main %} {% endblock %}</main>
+
+<!-- Footer -->
+<footer class="footer bg-light text-center text-lg-start">
+    <div class="container p-4">
+        <div class="row">
+            <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
+                <h5 class="text-uppercase">Follow me on:</h5>
+                <ul class="list-unstyled d-flex justify-content-center">
+                    <li>
+                        <a
+                                href="https://github.com/Baibhab-Adhikari"
+                                id="github"
+                                target="_blank"
+                                class="text-dark mx-2"
+                        >
+                            <i class="fab fa-github fa-2x"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                                href="https://www.linkedin.com/in/baibhab-adhikari-3380bb297/"
+                                id="linkedin"
+                                target="_blank"
+                                class="text-dark mx-2"
+                        >
+                            <i class="fab fa-linkedin fa-2x" id="linkedin-icon"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
+                <h5 class="text-uppercase">Quick Links:</h5>
+                <ul class="list-unstyled">
+                    <li>
+                        <a href="/generate" class="text-dark">Generate Passwords</a>
+                    </li>
+                    <li><a href="/manager" class="text-dark">Manage Passwords</a></li>
+                    <li><a href="/login" class="text-dark">Login</a></li>
+                    <li><a href="/logout" class="text-dark">Logout</a></li>
+                    <li><a href="/register" class="text-dark">Register</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="text-center p-3 bg-dark text-white">
+        <p class="mb-0">
+            Made with <i class="fas fa-heart"></i> by Baibhab Adhikari
+        </p>
+    </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="/app/static/script.js"></script>
+</body>
 </html>
