@@ -59,7 +59,7 @@
     <!-- navbar -->
     <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 fixed-top">
       <div class="container-fluid">
-        <a href="/" class="navbar-brand mb-0 h1 mx-3">Catvault</a>
+        <a href="/" class="navbar-brand mb-0 h1 mx-3"> Catvault</a>
 
         <button
           class="navbar-toggler"
@@ -87,19 +87,23 @@
       </div>
     </nav>
 
-    <!-- flask flash messages -->
+    <!-- flask flash messages
     {% if get_flashed_messages() %}
     <div class="flashes" id="flash-messages">
       <p>{{ get_flashed_messages() | join(" ") }}</p>
     </div>
-    {% endif %}
+    {% endif %} -->
 
     <!-- main section -->
-    {% block section %} {% endblock %}
+    <main class="mt-5 pt-4">
+      {% block main %}
+        
+      {% endblock %}
+    </main>
 
     <!-- footer  -->
 
-    <footer class="bg-dark text-white pt-3 fixed-bottom">
+    <footer class="bg-dark text-white pt-3 position-relative">
       <div class="container-fluid">
         <div class="d-flex flex-column flex-md-row justify-content-between">
           <!-- Quick Links -->
@@ -119,7 +123,7 @@
             </ul>
           </div>
           <!-- Follow Me -->
-          <div class="mb-4 mx-5">
+          <div class="mb-1 mx-5">
             <h5 class="text-uppercase">Follow Me</h5>
             <ul class="list-unstyled d-flex">
               <li class="me-3 mx-2">
@@ -148,7 +152,7 @@
           <div class="col-12 text-center">
             <p class="lead mb-1">
               Made with <i class="bi bi-heart-fill" id="heart"></i> by Baibhab
-              Adhikari
+              Adhikari <i class="bi bi-cat"></i>
             </p>
           </div>
         </div>
