@@ -1,5 +1,4 @@
-# type annotations advice from copilot
-from flask import render_template, redirect, session
+from flask import redirect, session
 from typing import Tuple, Union
 from app import bcrypt
 from functools import wraps
@@ -7,11 +6,6 @@ import secrets
 import string
 import re
 from app import cipher_suite
-
-
-# def apology(message: str, code: int = 400) -> Tuple[str, int]:
-#     """render error message as an apology to the user"""
-#     return render_template("apology.html", message=message, code=code), code
 
 
 # login required decorator
@@ -47,7 +41,7 @@ def check_email(email: str) -> bool:
 
 def generate_password(length, uppercase, lowercase, numbers, symbols) -> str:
     """generates a random password based on client side input"""
-    # password generation adapted from stackoverflow and secrets docs
+    # password generation
     characters_pool = ""
     # check for user specifications
     if uppercase == 'on':
@@ -59,7 +53,7 @@ def generate_password(length, uppercase, lowercase, numbers, symbols) -> str:
     if symbols == 'on':
         characters_pool += string.punctuation
 
-    # If no checkboxes are checked, provide a default random password (copilot)
+    # If no checkboxes are checked, provide a default random password
     if not characters_pool:
         characters_pool = string.ascii_letters + string.digits + string.punctuation
 
