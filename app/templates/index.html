@@ -1,93 +1,162 @@
 {% extends 'layout.html' %} {% block title %} Home - CatVault {% endblock %} {%
 block main %}
 <!-- Hero Section -->
-<div class="container-fluid text-center py-5 bg-dark text-white">
+<div
+  class="container-fluid text-center py-5 bg-dark text-white mt-0"
+  data-aos="fade-up"
+>
   <div class="row align-items-center">
-    <div class="col-md-6">
-      <h1 class="display-3 fw-bold">Welcome to CatVault</h1>
-      <p class="lead mt-4">
+    <div class="col-md-6" data-aos="fade-right">
+      <h1 class="display-1 fw-bold">Welcome to CatVault</h1>
+      <p class="lead mt-4" style="font-size: xx-large">
         Experience Whisker-Tight Security!
       </p>
-      <a href="/register" class="btn btn-warning btn-lg mt-3">Get Started</a>
+      <a href="/register" class="btn btn-warning btn-lg mt-3 mb-3 mb-md-0"
+        >Get Started 🐾</a
+      >
     </div>
-    <div class="col-md-6">
-      <img
-        src="/static/cat1-hero.jpg"
-        alt="Cat Illustration"
-        class="img-fluid rounded-circle shadow-lg"
-        style="max-width: 80%"
-      />
+    <div class="col-md-6" data-aos="fade-left">
+      <div class="img-container position-relative">
+        <img
+          src="/static/cat1-hero.jpg"
+          alt="Cat Illustration"
+          class="img-fluid shadow-lg"
+          style="width: 90%; border-radius: 12px"
+        />
+      </div>
     </div>
   </div>
 </div>
 
 <!-- Features Section -->
-<div class="container my-5">
+<div class="container my-5" data-aos="fade-up">
   <h2 class="text-center mb-4 fw-bold">Why Choose CatVault?</h2>
   <div class="row row-cols-1 row-cols-md-2 g-4">
-    <div class="col">
-      <div class="card h-100 text-center border-0 shadow-lg">
-        <div class="card-body">
-          <h5 class="card-title fw-bold">
-            <i class="bi bi-shield-lock-fill text-primary me-2"></i> Secure
-            Passwords
-          </h5>
-          <p class="card-text">
-            Protect your passwords with industry-standard encryption and hashing
-            techniques.
+    <div class="col" data-aos="zoom-in" data-aos-delay="100">
+      <div
+        class="card h-100 text-center border-0 shadow-lg"
+        style="min-height: 320px"
+      >
+        <div class="card-body d-flex flex-column align-items-center">
+          <i class="bi bi-shield-lock-fill text-primary fs-1 mb-3"></i>
+          <h5 class="card-title fw-bold">Secure Passwords</h5>
+          <p class="card-text mt-3">
+            With cutting-edge encryption standards, your data stays safe and
+            secure, ensuring that no unauthorized access can compromise your
+            privacy.
           </p>
         </div>
       </div>
     </div>
-    <div class="col">
-      <div class="card h-100 text-center border-0 shadow-lg">
-        <div class="card-body">
-          <h5 class="card-title fw-bold">
-            <i class="bi bi-person-circle text-warning me-2"></i> Easy to Use
-          </h5>
-          <p class="card-text">
-            A simple, intuitive interface designed for all users, beginner to
-            advanced.
+    <div class="col" data-aos="zoom-in" data-aos-delay="200">
+      <div
+        class="card h-100 text-center border-0 shadow-lg"
+        style="min-height: 320px"
+      >
+        <div class="card-body d-flex flex-column align-items-center">
+          <i class="bi bi-person-circle text-warning fs-1 mb-3"></i>
+          <h5 class="card-title fw-bold">Easy to Use</h5>
+          <p class="card-text mt-3">
+            A beginner-friendly design that simplifies password management for
+            everyone, while offering advanced features for power users.
           </p>
         </div>
       </div>
     </div>
-    <div class="col">
-      <div class="card h-100 text-center border-0 shadow-lg">
-        <div class="card-body">
-          <h5 class="card-title fw-bold">
-            <i class="bi bi-key-fill text-danger me-2"></i> Generate Strong
-            Passwords
-          </h5>
-          <p class="card-text">
-            Create complex passwords that are hard to crack but easy to manage.
+    <div class="col" data-aos="zoom-in" data-aos-delay="300">
+      <div
+        class="card h-100 text-center border-0 shadow-lg"
+        style="min-height: 320px"
+      >
+        <div class="card-body d-flex flex-column align-items-center">
+          <i class="bi bi-key-fill text-danger fs-1 mb-3"></i>
+          <h5 class="card-title fw-bold">Generate Strong Passwords</h5>
+          <p class="card-text mt-3">
+            Say goodbye to weak passwords. Generate complex, unique, and secure
+            passwords for all your accounts in just one click.
           </p>
         </div>
       </div>
     </div>
-    <div class="col">
-      <div class="card h-100 text-center border-0 shadow-lg">
-        <div class="card-body">
-          <h5 class="card-title fw-bold">
-            <i class="bi bi-cloud-arrow-up-fill text-success me-2"></i> Cloud
-            Sync
-          </h5>
-          <p class="card-text">
-            Access your passwords securely from any device with encrypted cloud
-            storage.
+    <div class="col" data-aos="zoom-in" data-aos-delay="400">
+      <div
+        class="card h-100 text-center border-0 shadow-lg"
+        style="min-height: 320px"
+      >
+        <div class="card-body d-flex flex-column align-items-center">
+          <i class="bi bi-cloud-arrow-up-fill text-success fs-1 mb-3"></i>
+          <h5 class="card-title fw-bold">Cloud Sync</h5>
+          <p class="card-text mt-3">
+            Access your password vault securely from any device. With user
+            authentication, your passwords are always at your fingertips, no
+            matter where you are.
           </p>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Testimonials -->
+<div class="container my-5" data-aos="fade-up">
+  <h2 class="text-center fw-bold mb-4">What Our Users Say</h2>
+  <div class="row">
+    <div class="col-md-4 mb-2 mb-md-0" data-aos="fade-up" data-aos-delay="100">
+      <div class="card shadow-lg text-center p-3">
+        <img
+          src="https://randomuser.me/api/portraits/men/37.jpg"
+          class="rounded-circle mx-auto mb-3"
+          alt="User 1"
+          style="width: 80px"
+        />
+        <h5 class="card-title">John Doe</h5>
+        <p class="card-text">
+          "CatVault has made managing my passwords so much easier. Highly
+          recommend it!"
+        </p>
+      </div>
+    </div>
+    <div class="col-md-4 mb-2 mb-md-0" data-aos="fade-up" data-aos-delay="200">
+      <div class="card shadow-lg text-center p-3">
+        <img
+          src="https://randomuser.me/api/portraits/women/33.jpg"
+          class="rounded-circle mx-auto mb-3"
+          alt="User 2"
+          style="width: 80px"
+        />
+        <h5 class="card-title">Jane Smith</h5>
+        <p class="card-text">
+          "The cloud sync feature is a game-changer. I can access my passwords
+          anytime!"
+        </p>
+      </div>
+    </div>
+    <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+      <div class="card shadow-lg text-center p-3">
+        <img
+          src="https://randomuser.me/api/portraits/women/61.jpg"
+          class="rounded-circle mx-auto mb-3"
+          alt="User 3"
+          style="width: 80px"
+        />
+        <h5 class="card-title">Alice Johnson</h5>
+        <p class="card-text">
+          "As a beginner, I found CatVault incredibly easy to use. Love the
+          strong password generator!"
+        </p>
       </div>
     </div>
   </div>
 </div>
 
 <!-- CTA Section -->
-<div class="container-fluid py-5 text-center bg-light">
+<div class="container-fluid py-5 text-center" data-aos="fade-up">
   <h2 class="fw-bold">Ready to Secure Your Digital World?</h2>
   <p class="lead mt-2">
     Sign up today and let CatVault take care of your passwords.
   </p>
-  <a href="/register" class="btn btn-primary btn-lg px-5">Join CatVault Now </a>
+  <a href="/register" class="btn btn-success btn-lg px-5"
+    >Join CatVault Now 🐾🔥</a
+  >
 </div>
 {% endblock %}

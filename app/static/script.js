@@ -1,10 +1,4 @@
- // Hide flash messages after 2.5 seconds
-  const flashMessages = document.getElementById("flash-messages");
-  if (flashMessages) {
-    setTimeout(() => {
-      flashMessages.style.display = "none";
-    }, 2500);
-  }
+
 
 // js code for the range slider
 

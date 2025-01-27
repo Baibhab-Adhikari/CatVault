@@ -9,9 +9,9 @@ import re
 from app import cipher_suite
 
 
-def apology(message: str, code: int = 400) -> Tuple[str, int]:
-    """render error message as an apology to the user"""
-    return render_template("apology.html", message=message, code=code), code
+# def apology(message: str, code: int = 400) -> Tuple[str, int]:
+#     """render error message as an apology to the user"""
+#     return render_template("apology.html", message=message, code=code), code
 
 
 # login required decorator
@@ -26,7 +26,7 @@ def login_required(f):
     return decorated_function
 
 
-def hash_password(password: str) -> str:
+def hash_password(password: str | None) -> str:
     """hashes the password"""
     # referred to flask-bcrypt docs
     return bcrypt.generate_password_hash(password).decode('utf-8')
