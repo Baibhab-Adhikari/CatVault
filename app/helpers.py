@@ -53,9 +53,9 @@ def generate_password(length, uppercase, lowercase, numbers, symbols) -> str:
     if symbols == 'on':
         characters_pool += string.punctuation
 
-    # If no checkboxes are checked, provide a default random password
+    # If no checkboxes are checked, provide a default random password of digits
     if not characters_pool:
-        characters_pool = string.ascii_letters + string.digits + string.punctuation
+        characters_pool = string.digits
 
     return "".join(secrets.choice(characters_pool) for _ in range(int(length)))
 
