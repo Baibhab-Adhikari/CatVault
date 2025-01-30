@@ -1,12 +1,5 @@
 
-
-// js code for the range slider
-
-function rangeSlider(value) {
-  document.getElementById("range-val").innerHTML = value;
-}
-
-// JS code using fetch api to dynamically update the output box in generate passwords page (adapted from copilot)
+// JS code using fetch api to dynamically update the output box in generate passwords page
 
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("generator-form");
@@ -30,3 +23,4 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   });
 });
+

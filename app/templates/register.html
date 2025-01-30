@@ -1,84 +1,95 @@
-{% extends 'layout.html' %} {% block title %} Register - CatVault {% endblock %}
+{% extends 'layout.html' %} 
+{% block title %} Register - CatVault {% endblock %} 
 {% block main %}
 
-<div
-  class="container min-vh-100 d-flex flex-column justify-content-between"
->
-  <form class="form" action="/register" method="post">
-    <p class="title text-center mb-4 h1">Register</p>
-    <p class="message text-center mb-4 h3">
-      Signup now and get full access to our app.
-    </p>
+<div class="container min-vh-100 d-flex justify-content-center align-items-center">
+  <div class="card shadow-lg border-0 rounded-4 p-4" style="max-width: 600px; width: 100%; background-color: #1a1a2e;">
+    <div class="card-body">
+      <p class="text-center mb-4 h1 text-warning">Register</p>
+      <p class="text-center mb-4 h4 text-light">
+        Signup now and get full access to our app.
+      </p>
 
-    <div class="d-flex justify-content-between mb-4">
-      <div class="form-group flex-grow-1 me-2">
-        <input
-          type="text"
-          class="form-control"
-          name="firstname"
-          placeholder="First Name"
-          required
-        />
-        <label for="firstname" class="form-label">Firstname</label>
-      </div>
+      <form class="form" action="/register" method="post">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="form-floating">
+              <input
+                type="text"
+                class="form-control"
+                name="firstname"
+                id="firstname"
+                placeholder="First Name"
+                required
+              />
+              <label for="firstname">First Name</label>
+            </div>
+          </div>
 
-      <div class="form-group flex-grow-1 ms-2">
-        <input
-          type="text"
-          class="form-control"
-          name="lastname"
-          placeholder="Last Name"
-          required
-        />
-        <label for="lastname" class="form-label">Lastname</label>
-      </div>
+          <div class="col-md-6">
+            <div class="form-floating mb-3">
+              <input
+                type="text"
+                class="form-control"
+                name="lastname"
+                id="lastname"
+                placeholder="Last Name"
+                required
+              />
+              <label for="lastname">Last Name</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-floating mb-3">
+          <input
+            type="email"
+            class="form-control"
+            name="email"
+            id="email"
+            placeholder="Email"
+            required
+          />
+          <label for="email">Email</label>
+        </div>
+
+        <div class="form-floating mb-3">
+          <input
+            type="password"
+            class="form-control"
+            name="password"
+            id="password"
+            placeholder="Password"
+            required
+          />
+          <label for="password">Password</label>
+        </div>
+
+        <div class="form-floating mb-4">
+          <input
+            type="password"
+            class="form-control"
+            name="confirmpassword"
+            id="confirmpassword"
+            placeholder="Confirm Password"
+            required
+          />
+          <label for="confirmpassword">Confirm Password</label>
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-warning w-100 d-flex align-items-center justify-content-center mb-3"
+        >
+          <i class="bi bi-paw me-2"></i> Submit
+        </button>
+
+        <p class="text-center mt-4 text-light">
+          Already have an account? <a href="/login" class="text-decoration-none">Sign In</a>
+        </p>
+      </form>
     </div>
-
-    <div class="form-group mb-4">
-      <input
-        type="email"
-        class="form-control"
-        name="email"
-        placeholder="Email"
-        required
-      />
-      <label for="email" class="form-label">Email</label>
-    </div>
-
-    <div class="form-group mb-4">
-      <input
-        type="password"
-        class="form-control"
-        name="password"
-        placeholder="Password"
-        required
-      />
-      <label for="password" class="form-label">Password</label>
-    </div>
-
-    <div class="form-group mb-4">
-      <input
-        type="password"
-        class="form-control"
-        name="confirmpassword"
-        placeholder="Confirm Password"
-        required
-      />
-      <label for="confirmpassword" class="form-label">Confirm Password</label>
-    </div>
-
-    <button
-      type="submit"
-      class="btn btn-warning w-100 d-flex align-items-center justify-content-center"
-    >
-      <span class="me-2">Submit 🐾</span>
-      <!-- Cat icon for the theme -->
-    </button>
-
-    <p class="signin text-center mt-4">
-      Already have an account? <a href="/login">Sign In</a>
-    </p>
-  </form>
+  </div>
 </div>
 
 {% endblock %}

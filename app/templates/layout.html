@@ -65,6 +65,14 @@
       .footer {
         background-color: black !important;
       }
+
+      .sidebar {
+        height: 100vh !important; /* Full height of the viewport */
+      }
+
+      #flash-messages:empty {
+        display: none !important;
+      }
     </style>
 
     <!-- bootstrap icons -->
@@ -123,14 +131,13 @@
     </nav>
 
     <!-- Flask Flash Messages -->
-    <div
-      class="flashes"
-      id="flash-messages"
-      style="height: 70px; margin-top: 80px"
-    >
-      {% if get_flashed_messages() %} {% for message in get_flashed_messages()
-      %}
-      <div class="alert alert-info alert-dismissible fade show" role="alert">
+    <div class="flashes" id="flash-messages" style=" height: 70px; margin-top: 80px">
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, message in messages %}
+      <div
+        class="alert alert-{{ category }} alert-dismissible fade show"
+        role="alert"
+      >
         {{ message }}
         <button
           type="button"
@@ -139,7 +146,7 @@
           aria-label="Close"
         ></button>
       </div>
-      {% endfor %} {% endif %}
+      {% endfor %} {% endif %} {% endwith %}
     </div>
 
     <!-- main section -->
@@ -250,5 +257,6 @@
 
     {# custom script#}
     <script src="/static/script.js"></script>
+    
   </body>
 </html>

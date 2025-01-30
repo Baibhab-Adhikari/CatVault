@@ -1,0 +1,103 @@
+{% extends 'layout.html' %} {% block title %} Profile - CatVault {% endblock %}
+{% block main %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <!-- User Details Section -->
+    <div class="col-md-5">
+      <div
+        class="card text-light shadow-lg p-4"
+        style="background-color: #1a1a2e; border-radius: 15px"
+      >
+        <div class="text-center mb-3">
+          <i
+            class="bi bi-person-circle"
+            style="font-size: 4rem; color: #ffcc00"
+          ></i>
+            <h3 class="mt-2">Profile</h3>
+        
+          <p class="text-light">First Name: {{ user.first_name }}</p>
+          <p class="text-light">Last Name: {{ user.last_name }}</p>
+          <p class="text-light">Email: {{ user.email }}</p>
+          <p class="text-light">Created At: {{ user.created_at }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile Update Form -->
+    <div class="col-md-5">
+      <div
+        class="card text-light shadow-lg p-4"
+        style="background-color: #1a1a2e; border-radius: 15px"
+      >
+        <h4 class="text-center mb-3">Update Profile</h4>
+        <form action="{{ url_for('update_profile') }}" method="POST">
+          <div class="mb-3">
+            <label for="firstname" class="form-label">First Name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="firstname"
+              name="firstname"
+              value="{{ user.first_name }}"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="lastname" class="form-label">Last Name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="lastname"
+              name="lastname"
+              value="{{ user.last_name }}"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              name="email"
+              value="{{ user.email }}"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="new_password" class="form-label">New Password</label>
+            <input
+              type="password"
+              class="form-control"
+              id="new_password"
+              name="new_password"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="confirm_password" class="form-label"
+              >Confirm New Password</label
+            >
+            <input
+              type="password"
+              class="form-control"
+              id="confirm_password"
+              name="confirm_password"
+            />
+          </div>
+
+          <div class="d-grid">
+            <button
+              type="submit"
+              class="btn btn-warning"
+              style="border-radius: 10px; font-weight: bold"
+            >
+              <i class="bi bi-save-fill"></i> Save Changes
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

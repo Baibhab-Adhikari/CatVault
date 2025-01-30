@@ -26,3 +26,11 @@ class Manager(db.Model):  # type: ignore
     created_at = db.Column(db.DateTime, default=func.now())
     updated_at = db.Column(
         db.DateTime, default=func.now(), onupdate=func.now())
+
+
+class Contact(db.Model):  # type: ignore
+    __tablename__ = "contact"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(100), nullable=False)
+    message = db.Column(db.String(200), nullable=False)
