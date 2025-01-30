@@ -1,13 +1,13 @@
 from typing import Union, Tuple
 
-from flask import render_template, request, redirect, session, jsonify, flash
+from flask import render_template, request, redirect, session, jsonify, flash, url_for
 from flask.wrappers import Response
 from flask_mail import Message  # type: ignore
 from sqlalchemy import text
 from sqlalchemy.exc import IntegrityError
 
 from app import mail  # type: ignore
-from app.helpers import login_required, hash_password, check_password, check_email, generate_password  # type: ignore
+from app.helpers import login_required, hash_password, check_password, check_email, generate_password, decrypt_password, encrypt_password  # type: ignore
 from app.models import Users, Manager, Contact  # type: ignore
 
 
@@ -161,88 +161,100 @@ def register_routes(app, db):
         flash("You have been logged out.", 'success')
         return redirect("/login")  # type: ignore
 
-    # # route for password manager
+    # route for password manager
 
-    # @app.route("/manager", methods=["GET", "POST"])
-    # @login_required
-    # def manager():
-    #     """Enables the user to manage their passwords"""
+    @app.route("/manager", methods=["GET", "POST"])
+    @login_required
+    def manager():
+        """Enables the user to manage their passwords"""
 
-    #     user_email = db.execute(
-    #         "SELECT email FROM users WHERE id = ?", session["user_id"])
-    #     user_email = user_email[0]["email"]
+        # check if user is logged in
 
-    #     # for POST
-    #     if request.method == "POST":
-    #         # check for user action:
+        user_id = session.get("user_id")
 
-    #         # for adding password
-    #         if 'add' in request.form:
+        if not user_id:
+            flash("Please login to view your stored passwords!", 'warning')
+            return redirect("/login")
 
-    #             # variables to store form data
-    #             website = request.form.get("website")
-    #             username = request.form.get("username")
-    #             password = request.form.get("password")
-    #             encrypted_pw = encrypt_password(password)
+        # fetch the user's data from the database
+        user = Users.query.get(user_id)
 
-    #             # store the password in the database
-    #             try:
-    #                 db.execute("INSERT INTO manager (user_email, website, username, password) VALUES (?, ?, ?, ?)",
-    #                            user_email, website, username, encrypted_pw)
-    #             except Exception as e:
-    #                 flash(str(e), 400)
+        if not user:
+            flash("User not found!", 'danger')
+            return redirect("/login")
 
-    #             flash("Password added successfully!")
-    #             return redirect(url_for('manager'))
-    #             # for editing password
-    #         elif 'edit' in request.form:
+        user_email = user.email
 
-    #             password_id = request.form.get("id")
-    #             new_password = request.form.get("password")
+        # for POST
+        try:
+            # Adding a new password
+            if "add" in request.form:
+                website = request.form.get("website")
+                username = request.form.get("username")
+                password = request.form.get("password")
 
-    #             new_encrypted_pw = encrypt_password(new_password)
+                # validating the inputs
+                if not website or not username or not password:
+                    flash('Please fill in all fields!', 'danger')
+                    return redirect('/manager')
 
-    #             # update the password in the database
-    #             try:
-    #                 db.execute("UPDATE manager SET password = ? WHERE id = ? AND user_email = ?",
-    #                            new_encrypted_pw, password_id, user_email)
-    #             except Exception as e:
-    #                 flash(str(e), 400)
+                encrypted_pw = encrypt_password(password)
 
-    #             flash("Password updated successfully!")
-    #             return redirect(url_for('manager'))
-    #         # for deleting password
-    #         elif 'delete' in request.form:
-    #             password_id = request.form.get("id")
+                new_entry = Manager(
+                    user_email=user_email,
+                    website=website,
+                    username=username,
+                    password=encrypted_pw
+                )
+                db.session.add(new_entry)
+                db.session.commit()
+                flash("Password added successfully!", "success")
 
-    #             # delete the password from the database
-    #             try:
-    #                 db.execute("DELETE FROM manager WHERE id = ? AND user_email = ?",
-    #                            password_id, user_email)
-    #             except Exception as e:
-    #                 flash(str(e), 400)
+            # Editing an existing password
+            elif "edit" in request.form:
+                password_id = request.form.get("id")
+                new_password = request.form.get("password")
 
-    #             flash("Password deleted successfully!")
-    #             # Redirect to avoid form resubmission
-    #             return redirect(url_for("manager"))
+                entry = Manager.query.filter_by(id=password_id, user_email=user_email).first()
+                if entry:
+                    entry.password = encrypt_password(new_password)
+                    db.session.commit()
+                    flash("Password updated successfully!", "success")
+                else:
+                    flash("Password entry not found!", "danger")
 
-    #     # fetch the user's passwords from the database (GET)
+            # Deleting a password
+            elif "delete" in request.form:
+                password_id = request.form.get("id")
 
-    #     data = db.execute(
-    #         "SELECT id, website, username, password FROM manager WHERE user_email = ?", user_email)
+                entry = Manager.query.filter_by(id=password_id, user_email=user_email).first()
+                if entry:
+                    db.session.delete(entry)
+                    db.session.commit()
+                    flash("Password deleted successfully!", "success")
+                else:
+                    flash("Password entry not found!", "danger")
 
-    #     decrypted_passwords_list = []  # empty list to store decrypted passwords
+        except Exception as e:
+            db.session.rollback()
+            flash(f"An error occurred: {str(e)}", "danger")
 
-    #     for row in data:
-    #         decrypted_password = decrypt_password(row['password'])
-    #         decrypted_passwords_list.append({
-    #             'id': row['id'],
-    #             'website': row['website'],
-    #             'username': row['username'],
-    #             'password': decrypted_password
-    #         })
+            return redirect("/manager")
 
-    #     return render_template("manage_password.html", passwords=decrypted_passwords_list)
+        # Fetch user's saved passwords
+        stored_passwords = Manager.query.filter_by(user_email=user_email).all()
+
+        decrypted_passwords_list = [
+            {
+                "id": row.id,
+                "website": row.website,
+                "username": row.username,
+                "password": decrypt_password(row.password),
+            }
+            for row in stored_passwords
+        ]
+
+        return render_template("manage_password.html", passwords=decrypted_passwords_list)
 
     # route for Account Dashboard
     @app.route('/account')
@@ -331,6 +343,7 @@ def register_routes(app, db):
         return render_template("profile.html", user=user)
 
     # route for updating user profile
+    # noinspection SqlNoDataSourceInspection
     @app.route('/update_profile', methods=['POST'])
     def update_profile():
         """Update profile route to update user's profile"""
