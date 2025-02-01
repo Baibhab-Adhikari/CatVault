@@ -1,40 +1,100 @@
 {% extends 'layout.html' %} {% block title %} Register - CatVault {% endblock %}
 {% block main %}
-<!-- /* From Uiverse.io by Yaya12085 */  -->
-<form class="form" action="/register" method="post">
-  <p class="title">Register</p>
-  <p class="message">Signup now and get full access to our app.</p>
-  <div class="flex">
-    <label>
-      <input placeholder="" type="text" class="input" name="firstname" />
-      <span>Firstname</span>
-    </label>
 
-    <label>
-      <input placeholder="" type="text" class="input" name="lastname" />
-      <span>Lastname</span>
-    </label>
+<div
+  class="container min-vh-100 d-flex justify-content-center align-items-center"
+>
+  <div
+    class="card shadow-lg border-0 bg-dark rounded-4 p-4"
+    style="max-width: 600px; width: 100%"
+  >
+    <div class="card-body">
+      <p class="text-center mb-4 h1 text-warning">Register</p>
+      <p class="text-center mb-4 h4 text-light">
+        Signup now and get full access to our app.
+      </p>
+
+      <form class="form" action="/register" method="post">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="form-floating">
+              <input
+                type="text"
+                class="form-control"
+                name="firstname"
+                id="firstname"
+                placeholder="First Name"
+                required
+              />
+              <label for="firstname">First Name</label>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-floating mb-3">
+              <input
+                type="text"
+                class="form-control"
+                name="lastname"
+                id="lastname"
+                placeholder="Last Name"
+                required
+              />
+              <label for="lastname">Last Name</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-floating mb-3">
+          <input
+            type="email"
+            class="form-control"
+            name="email"
+            id="email"
+            placeholder="Email"
+            required
+          />
+          <label for="email">Email</label>
+        </div>
+
+        <div class="form-floating mb-3">
+          <input
+            type="password"
+            class="form-control"
+            name="password"
+            id="password"
+            placeholder="Password"
+            required
+          />
+          <label for="password">Password</label>
+        </div>
+
+        <div class="form-floating mb-4">
+          <input
+            type="password"
+            class="form-control"
+            name="confirmpassword"
+            id="confirmpassword"
+            placeholder="Confirm Password"
+            required
+          />
+          <label for="confirmpassword">Confirm Password</label>
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-warning w-100 d-flex align-items-center justify-content-center mb-3"
+        >
+          <i class="bi bi-paw me-2"></i> Submit
+        </button>
+
+        <p class="text-center mt-4 text-light">
+          Already have an account?
+          <a href="/login" class="text-decoration-none text-warning">Sign In</a>
+        </p>
+      </form>
+    </div>
   </div>
+</div>
 
-  <label>
-    <input placeholder="" type="email" class="input" name="email" />
-    <span>Email</span>
-  </label>
-
-  <label>
-    <input placeholder="" type="password" class="input" name="password" />
-    <span>Password</span>
-  </label>
-  <label>
-    <input
-      placeholder=""
-      type="password"
-      class="input"
-      name="confirmpassword"
-    />
-    <span>Confirm password</span>
-  </label>
-  <button class="submit">Submit</button>
-  <p class="signin">Already have an acount ? <a href="/login">Signin</a></p>
-</form>
 {% endblock %}

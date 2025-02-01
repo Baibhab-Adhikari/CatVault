@@ -1,229 +1,475 @@
-from flask import render_template, request, redirect, session, jsonify, flash, url_for
-from flask.wrappers import Response
-from typing import Union, Tuple
-from app.helpers import apology, login_required, hash_password, check_password, check_email, generate_password, encrypt_password, decrypt_password  # type: ignore
-from app import app, db
+from typing import Union, Tuple, Optional, Any
+
+from flask import render_template, request, redirect, session, jsonify, flash, url_for, Response
+from werkzeug.wrappers import Response as WerkzeugResponse
+from flask_mail import Message  # type: ignore
+from sqlalchemy import text
+from sqlalchemy.exc import IntegrityError
+
+from app import mail  # type: ignore
+from app.helpers import *  # type: ignore
+from app.models import Users, Manager, Contact  # type: ignore
 
 
-@app.errorhandler(404)
-def page_not_found(e):
-    """404 error handler"""
-    return render_template('404.html'), 404
+def register_routes(app, db):
+    @app.errorhandler(404)
+    def page_not_found(e: Exception) -> Tuple[str, int]:
+        """404 error handler"""
+        return render_template('404.html'), 404
 
+    @app.route("/")
+    def index() -> str:
+        """renders the home page"""
+        # flash("Welcome to the password manager!")
+        return render_template("index.html")
 
-@app.route("/")
-def index() -> str:
-    """renders the home page"""
-    return render_template("index.html")
+    @app.route("/register", methods=["GET", "POST"])
+    def register() -> Union[str, tuple[str, int], WerkzeugResponse]:  # type: ignore
+        """Registration for new user"""
 
+        # for GET:
+        if request.method == 'GET':
+            return render_template("register.html")
 
-@app.route("/register", methods=["GET", "POST"])
-def register() -> Union[str, tuple[str, int], Response]:
-    """Registration for new user"""
+        # for POST:
+        elif request.method == "POST":
 
-    # for GET:
-    if request.method == 'GET':
-        return render_template("register.html")
+            # Variables to store info
+            first_name: Optional[str] = request.form.get("firstname")
+            last_name: Optional[str] = request.form.get("lastname")
+            email: Optional[str] = request.form.get("email")
+            password: Optional[str] = request.form.get("password")
+            confirm_password: Optional[str] = request.form.get(
+                "confirmpassword")
 
-    # for POST:
-    elif request.method == "POST":
+            # Input validation
+            if not first_name or not last_name or not email:
+                flash("Please fill in all fields!", 'danger')
+                return redirect("/register")
 
-        # Variables to store info with correct type annotations
-        first_name: Union[str, None] = request.form.get("firstname")
-        last_name: Union[str, None] = request.form.get("lastname")
-        email: Union[str, None] = request.form.get("email")
-        password: Union[str, None] = request.form.get("password")
-        confirm_password: Union[str, None] = request.form.get(
-            "confirmpassword")
+            # Password validation
+            if not password or not confirm_password:
+                flash("Please enter a password!", 'danger')
+                return redirect("/register")
+            # Check if the passwords match
+            if password != confirm_password:
+                flash("Passwords do not match!", 'danger')
+                return redirect("/register")
+            # email validation
+            if not check_email(email):  # type: ignore
+                flash("Please enter a valid email address!", 'danger')
+                return redirect("/register")
+            # hash the password
+            hashed_pw: str = hash_password(password)  # type: ignore
 
-        # Input validation
-        if not first_name or not last_name or not email:
-            return apology("Please enter details correctly!", 400)
+            # create a new User instance
+            new_user = Users(
+                first_name=first_name,
+                last_name=last_name,
+                email=email,
+                hashed_password=hashed_pw
 
-        # Password validation
-        if not password or not confirm_password:
-            return apology("Please enter a password!", 400)
+            )
 
-        # Check if the passwords match
-        if password != confirm_password:
-            return apology("Passwords do not match!", 400)
-
-        # email validation
-        if not check_email(email):
-            return apology("Please enter a valid email address!", 400)
-
-        # hash the password
-        hash = hash_password(password)
-
-        # try to store the user in the database
+            # Try to add the user to the database
         try:
-            db.execute("INSERT INTO users (first_name, last_name, email, hashed_password) VALUES (?, ?, ?, ?)",
-                       first_name, last_name, email, hash)
-        except:
-            return apology("Email already in use!!", 400)
+            db.session.add(new_user)
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
+            flash("Email already in use!", 'warning')
+            return redirect("/register")  # type: ignore
 
-    return redirect("/login")  # type: ignore
+        return redirect("/login")  # type: ignore
 
+    # login route
 
-# login route
+    @app.route("/login", methods=["GET", "POST"])
+    def login() -> Union[Tuple[str, int], Response]:
 
-@app.route("/login", methods=["GET", "POST"])
-def login() -> Union[Tuple[str, int], Response]:
-
-    # for POST
-    if request.method == "POST":
-
-        # variables to store form data
-        email: Union[str, None] = request.form.get("email")
-        password: Union[str, None] = request.form.get("password")
-
-        # input validation
-
-        if not email or not password:
-            return apology("Please enter email and password!", 400)
-
-        # fetching the user by their email
-        try:
-            user = db.execute("SELECT * from users WHERE email = ?", email)
-            if not user:
-                return apology("Invalid email or password!", 400)
-            hashed_pw = user[0]["hashed_password"]
-        except Exception:
-            return apology("An error occurred, please try again later.", 400)
-
-        # check for password match
-        if not check_password(password, hashed_pw):
-            return apology("Invalid password!", 400)
-
-        session["user_id"] = user[0]["id"]  # store user in the session
-
-        flash("You have been logged in!")  # flash user to update them
-
-        return redirect("/")  # type: ignore
-
-    # for GET
-
-    return render_template("login.html")  # type: ignore
-
-
-# password generator route
-@app.route("/generate", methods=["GET", "POST"])
-@login_required
-def generate() -> Union[str, Response, Tuple[str, int]]:
-    """Generates a random password"""
-
-    # for POST
-    if request.method == "POST":
-        # variables to store form data
-
-        length = request.form.get("rangevalue")
-        uppercase = request.form.get("uppercase")
-        lowercase = request.form.get("lowercase")
-        numbers = request.form.get("numbers")
-        symbols = request.form.get("symbols")
-
-        # generate the password based on the user specification
-
-        generated_password = generate_password(
-            length, uppercase, lowercase, numbers, symbols)
-
-        # return the password as a json response to the client
-        return jsonify(password=generated_password)
-
-    # for GET
-    return render_template("generate_password.html")
-
-# logout route
-
-
-@app.route("/logout")
-@login_required
-def logout() -> Response:
-    """Logs out the user"""
-    session.clear()
-    flash("You have been logged out.")  # flash user to update them
-    return redirect("/login")  # type: ignore
-
-
-# route for password manager
-
-@app.route("/manager", methods=["GET", "POST"])
-@login_required
-def manager():
-    """Enables the user to manage their passwords"""
-
-    user_email = db.execute(
-        "SELECT email FROM users WHERE id = ?", session["user_id"])
-    user_email = user_email[0]["email"]
-
-    # for POST
-    if request.method == "POST":
-        # check for user action:
-
-        # for adding password
-        if 'add' in request.form:
+        # for POST
+        if request.method == "POST":
 
             # variables to store form data
-            website = request.form.get("website")
-            username = request.form.get("username")
-            password = request.form.get("password")
-            encrypted_pw = encrypt_password(password)
+            email: Optional[str] = request.form.get("email")
+            password: Optional[str] = request.form.get("password")
 
-            # store the password in the database
+            # input validation
+
+            if not email or not password:
+                flash("Please enter email and password!", 'danger ')
+                # redirect users to login route again
+                return redirect("/login")  # type: ignore
+
+            # fetching the user by their email
+            user = Users.query.filter_by(email=email).first()
+
+            if not user:
+                flash("Invalid email or password!", 'danger')
+                return redirect("/login")  # type: ignore
+
+            # check for password match
+            if not check_password(password, user.hashed_password):  # type: ignore
+                flash("Invalid password!", 'danger')
+                return redirect("/login")  # type: ignore
+
+            session["user_id"] = user.id  # store user in the session
+
+            # flash user to update them
+            flash("You have been logged in!", 'success')
+
+            return redirect("/")  # type: ignore
+
+        # for GET
+
+        return render_template("login.html")  # type: ignore
+
+    # password generator route / API
+    @app.route("/generate", methods=["GET", "POST"])
+    @login_required
+    def generate() -> Union[str, Response, Tuple[str, int]]:
+        """Generates a random password"""
+
+        # for POST
+        if request.method == "POST":
+            # variables to store form data
+
+            length = request.form.get("rangevalue")
+            uppercase = request.form.get("uppercase")
+            lowercase = request.form.get("lowercase")
+            numbers = request.form.get("numbers")
+            symbols = request.form.get("symbols")
+
+            # generate the password based on the user specification
+
+            generated_password = generate_password(
+                length, uppercase, lowercase, numbers, symbols)
+
+            # return the password as a json response to the client
+            return jsonify(password=generated_password)
+
+        # for GET
+        return render_template("generate_password.html")
+
+    # logout route
+
+    @app.route("/logout")
+    @login_required
+    def logout() -> Response:
+        """Logs out the user"""
+        session.clear()
+        # flash user to update them
+        flash("You have been logged out.", 'success')
+        return redirect("/login")  # type: ignore
+
+    # route for password manager
+
+    @app.route("/manager", methods=["GET", "POST"])
+    @login_required
+    def manager():
+        """Enables the user to manage their passwords"""
+
+        # check if user is logged in
+
+        user_id = session.get("user_id")
+
+        if not user_id:
+            flash("Please login to view your stored passwords!", 'warning')
+            return redirect("/login")
+
+        # fetch the user's data from the database
+        user = Users.query.get(user_id)
+
+        if not user:
+            flash("User not found!", 'danger')
+            return redirect("/login")
+
+        user_email = user.email
+
+        # for POST
+        try:
+            # Adding a new password
+            if "add" in request.form:
+                website = request.form.get("website")
+                username = request.form.get("username")
+                password = request.form.get("password")
+
+                # validating the inputs
+                if not website or not username or not password:
+                    flash('Please fill in all fields!', 'danger')
+                    return redirect('/manager')
+
+                encrypted_pw = encrypt_password(password)
+
+                new_entry = Manager(
+                    user_email=user_email,
+                    website=website,
+                    username=username,
+                    password=encrypted_pw
+                )
+                db.session.add(new_entry)
+                db.session.commit()
+                flash("Password added successfully!", "success")
+
+            # Editing an existing password
+            elif "edit" in request.form:
+                password_id = request.form.get("id")
+                new_password = request.form.get("password")
+
+                entry = Manager.query.filter_by(
+                    id=password_id, user_email=user_email).first()
+                if entry:
+                    entry.password = encrypt_password(new_password)
+                    db.session.commit()
+                    flash("Password updated successfully!", "success")
+                else:
+                    flash("Password entry not found!", "danger")
+
+            # Deleting a password
+            elif "delete" in request.form:
+                password_id = request.form.get("id")
+
+                entry = Manager.query.filter_by(
+                    id=password_id, user_email=user_email).first()
+                if entry:
+                    db.session.delete(entry)
+                    db.session.commit()
+                    flash("Password deleted successfully!", "success")
+                else:
+                    flash("Password entry not found!", "danger")
+
+        except Exception as e:
+            db.session.rollback()
+            flash(f"An error occurred: {str(e)}", "danger")
+
+            return redirect("/manager")
+
+        # Fetch user's saved passwords
+        stored_passwords = Manager.query.filter_by(user_email=user_email).all()
+
+        decrypted_passwords_list = [
+            {
+                "id": row.id,
+                "website": row.website,
+                "username": row.username,
+                "password": decrypt_password(row.password),
+            }
+            for row in stored_passwords
+        ]
+
+        return render_template("manage_password.html", passwords=decrypted_passwords_list)
+
+    # route for Account Dashboard
+    @app.route('/account')
+    @login_required
+    def account_dashboard():
+        """Displays the user's account dashboard"""
+
+        # check if user is logged in
+
+        user_id = session.get("user_id")
+
+        if not user_id:
+            flash("Please login to view your account!", 'warning')
+            return redirect("/login")
+
+        # fetch the user's data from the database
+        user = Users.query.filter_by(id=user_id).first()
+
+        if not user:
+            flash("User not found!", 'danger')
+            return redirect("/login")
+
+        return render_template('account.html', user=user)
+
+    @app.route('/contactus', methods=["GET", "POST"])
+    def contactus() -> Union[str, Response]:
+        """Contact us form"""
+
+        if request.method == "POST":
+            name = request.form.get("name")
+            email = request.form.get("email")
+            message = request.form.get("message")
+
+            if not name or not email or not message:
+                flash("Please fill in all the fields!", 'danger')
+                return redirect("/contactus")  # type: ignore
+
             try:
-                db.execute("INSERT INTO manager (user_email, website, username, password) VALUES (?, ?, ?, ?)",
-                           user_email, website, username, encrypted_pw)
+                # start the transaction
+                db.session.begin()
+                # create a new contact instance
+                new_contact = Contact(
+                    name=name,
+                    email=email,
+                    message=message
+                )
+                db.session.add(new_contact)
+                db.session.commit()  # commit the transaction
+
             except Exception as e:
-                return apology(str(e), 400)
+                db.session.rollback()  # rollback transaction in case of error
+                flash(str(e), 'danger')  # type: ignore
+                return redirect("/contactus")  # type: ignore
 
-            flash("Password added successfully!")
-            return redirect(url_for('manager'))
-            # for editing password
-        elif 'edit' in request.form:
+            # Send email with the message
+            msg = Message("New Contact Us Message - CatVault", recipients=[
+                app.config['MAIL_USERNAME']])
+            msg.body = f"Name: {name}\nEmail: {email}\n\nMessage:\n{message}"
+            mail.send(msg)
 
-            password_id = request.form.get("id")
-            new_password = request.form.get("password")
+            db.session.commit()  # commit transaction
 
-            new_encrypted_pw = encrypt_password(new_password)
+            flash("Message sent successfully!", 'success')
+            return redirect("/contactus")  # type: ignore
 
-            # update the password in the database
-            try:
-                db.execute("UPDATE manager SET password = ? WHERE id = ? AND user_email = ?",
-                           new_encrypted_pw, password_id, user_email)
-            except Exception as e:
-                return apology(str(e), 400)
+        return render_template("contactus.html")  # for GET request
 
-            flash("Password updated successfully!")
-            return redirect(url_for('manager'))
-        # for deleting password
-        elif 'delete' in request.form:
-            password_id = request.form.get("id")
+    # route for profile details display
+    @app.route('/profile')
+    @login_required
+    def profile():
+        """Fetches user's profile"""
 
-            # delete the password from the database
-            try:
-                db.execute("DELETE FROM manager WHERE id = ? AND user_email = ?",
-                           password_id, user_email)
-            except Exception as e:
-                return apology(str(e), 400)
+        user_id = session.get("user_id")
 
-            flash("Password deleted successfully!")
-            # Redirect to avoid form resubmission
-            return redirect(url_for("manager"))
+        if not user_id:
+            flash("Please login to view your profile!", 'warning')
+            return redirect("/login")
 
-    # fetch the user's passwords from the database (GET)
+        user = Users.query.filter_by(id=user_id).first()
 
-    data = db.execute(
-        "SELECT id, website, username, password FROM manager WHERE user_email = ?", user_email)
+        if not user:
+            flash("User not found!", 'danger')
+            return redirect("/login")
 
-    decrypted_passwords_list = []  # empty list to store decrypted passwords
+        return render_template("profile.html", user=user)
 
-    for row in data:
-        decrypted_password = decrypt_password(row['password'])
-        decrypted_passwords_list.append({
-            'id': row['id'],
-            'website': row['website'],
-            'username': row['username'],
-            'password': decrypted_password
-        })
+    # route for updating user profile
+    # noinspection SqlNoDataSourceInspection
+    @app.route('/update_profile', methods=['POST'])
+    def update_profile():
+        """Update profile route to update user's profile"""
 
-    return render_template("manage_password.html", passwords=decrypted_passwords_list)
+        # check for user in the session
+        user_id = session.get("user_id")
+        if not user_id:
+            flash("Please login to update your profile!", 'warning')
+            return redirect("/login")
+
+        # get new details from the form
+        new_first_name = request.form.get("firstname")
+        new_last_name = request.form.get("lastname")
+        new_email = request.form.get("email")
+        new_password = request.form.get("new_password")
+        confirm_new_password = request.form.get("confirm_password")
+
+        # email validation
+        if not new_email and check_email(new_email):
+            flash("Please enter a valid email address!", 'danger')
+            return redirect("/profile")
+        # password validation if provided
+        if new_password and new_password != confirm_new_password:
+            flash("Passwords do not match!", 'danger')
+            return redirect("/profile")
+
+        # try to update user details in the database
+        try:
+            db.session.begin()  # begin transaction
+            update_fields = {}
+            if new_first_name:
+                update_fields['first_name'] = new_first_name
+            if new_last_name:
+                update_fields['last_name'] = new_last_name
+            if new_email:
+                update_fields['email'] = new_email
+            if new_password:
+                update_fields['hashed_password'] = hash_password(new_password)
+
+            if update_fields:
+                set_clause = ", ".join(
+                    [f"{key} = :{key}" for key in update_fields.keys()])
+                update_fields['id'] = user_id
+                db.session.execute(
+                    text(f'UPDATE users SET {set_clause} WHERE id = :id'),
+                    update_fields
+                )
+
+            db.session.commit()  # Commit transaction
+            flash("Profile updated successfully!", 'success')
+            return redirect('/profile')
+
+        except Exception as e:
+            db.session.rollback()
+            flash(f"Error: {str(e)}", 'danger')
+            return redirect("/profile")
+
+    # forgot password route
+
+    @app.route('/forgot_password', methods=["GET", "POST"])
+    def forgot_password() -> Any:
+        """Route for requesting password reset link"""
+
+        if request.method == 'POST':
+            # get email and fetch user by email
+            email = request.form.get('email')
+            user: Optional[Users] = Users.query.filter_by(email=email).first()
+
+            if user:
+                token: str = generate_token(user.email)
+                reset_link: str = url_for(
+                    'reset_password', token=token, _external=True)
+
+                # sending the email
+                msg: Message = Message('Password Reset Request',
+                                       sender=Config.MAIL_USERNAME, recipients=[user.email])
+
+                msg.body = f"Click the link to reset your password: {
+                    reset_link}"
+                mail.send(msg)
+
+                flash("Password reset link sent to your email!", 'info')
+
+            else:
+                flash("No account found with this email!", 'danger')
+        return render_template('forgot_password.html')
+
+    # reset password route
+
+    @app.route('/reset_password/<token>', methods=['GET', 'POST'])
+    def reset_password(token: str) -> Any:
+        email = verify_token(token)
+        if email is None:
+            flash('Invalid or expired token.', 'danger')
+            return redirect(url_for('forgot_password'))
+
+        if request.method == 'POST':
+            new_password: Optional[str] = request.form.get('password')
+            confirm_password: Optional[str] = request.form.get(
+                'confirm_password')
+
+            # Ensure both fields are filled in
+            if not new_password or not confirm_password:
+                flash("Please fill in both password fields.", "danger")
+                return redirect(url_for('reset_password', token=token))
+
+            if new_password != confirm_password:
+                flash("Passwords do not match!", "danger")
+                return redirect(url_for('reset_password', token=token))
+
+            user: Optional[Users] = Users.query.filter_by(email=email).first()
+            if user:
+                try:
+                    user.hashed_password = hash_password(new_password)
+                    db.session.commit()
+                    flash('Password updated successfully!', 'success')
+                    return redirect(url_for('login'))
+                except Exception as e:
+                    db.session.rollback()
+                    flash("An error occurred while updating your password.", "danger")
+                    return redirect(url_for('reset_password', token=token))
+            else:
+                flash("User not found.", "danger")
+                return redirect(url_for('forgot_password'))
+
+        return render_template("reset_password.html", token=token)

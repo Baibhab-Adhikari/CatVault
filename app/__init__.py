@@ -1,23 +1,43 @@
-# initialise the flask app
+import os
+
+from cryptography.fernet import Fernet  # type: ignore
+from dotenv import load_dotenv
 from flask import Flask
 from flask_bcrypt import Bcrypt  # type: ignore
-from cs50 import SQL  # type: ignore
+from flask_mail import Mail  # type: ignore
+from flask_migrate import Migrate  # type: ignore
+from flask_session import Session  # type: ignore
+from flask_sqlalchemy import SQLAlchemy
+
 from config import Config
-from flask_session import Session  # type: ignore 
-from cryptography.fernet import Fernet  # type: ignore
 
-# init flask app
-app = Flask(__name__)
+load_dotenv()
 
-# load app config
-app.config.from_object(Config)
+# creating instances of the extensions
+bcrypt: Bcrypt = Bcrypt()
+db: SQLAlchemy = SQLAlchemy()
+session: Session = Session()
+mail: Mail = Mail()
+migrate: Migrate = Migrate()
+KEY = os.getenv("ENCRYPTION_KEY")
+cipher_suite = Fernet(KEY.encode())  # type: ignore
 
-# init flask extensions
-bcrypt = Bcrypt(app)
-db = SQL("sqlite:///database/catvault.db")
-Session(app)
-# password encryption advice from copilot for the password manager route
-key = app.config["ENCRYPTION_KEY"]
-cipher_suite = Fernet(key.encode())
 
-from app import routes
+def create_app() -> Flask:
+    """Create and configure an instance of the Flask application."""
+
+    app = Flask(__name__, template_folder="templates")
+
+    app.config.from_object(Config)  # loading the config file
+
+    # initializing the extensions
+    bcrypt.init_app(app)
+    db.init_app(app)
+    session.init_app(app)
+    mail.init_app(app)
+    migrate.init_app(app, db)
+
+    from app.routes import register_routes  # type: ignore
+    register_routes(app, db)
+
+    return app

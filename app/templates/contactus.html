@@ -1,0 +1,40 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    Contact Us - CatVault
+{% endblock %}
+
+{% block main %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card p-4 shadow-lg" style="max-width: 500px; width: 100%; border-radius: 15px; background-color: #1a1a2e; color: #ffffff;">
+        <div class="text-center mb-3">
+            <i class="bi bi-chat-dots-fill" style="font-size: 2rem; color: #ffcc00;"></i>
+            <h3 class="mt-2">Meow with Us!</h3>
+            <p class="text-light">Got a question or feedback? Send us a message!</p>
+        </div>
+
+        <form action="/contactus" method="POST">
+            <div class="mb-3">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="your@email.com">
+            </div>
+
+            <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Your Name">
+            </div>
+
+            <div class="mb-3">
+                <label for="message" class="form-label">Message</label>
+                <textarea class="form-control" id="message" name="message" rows="4" placeholder="Type your message here..."></textarea>
+            </div>
+
+            <div class="d-grid">
+                <button type="submit" class="btn btn-warning" style="border-radius: 10px; font-weight: bold;">
+                    <i class="bi bi-send-fill"></i> Send Message
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
