@@ -1,9 +1,13 @@
-{% extends 'layout.html' %} 
-{% block title %} Register - CatVault {% endblock %} 
+{% extends 'layout.html' %} {% block title %} Register - CatVault {% endblock %}
 {% block main %}
 
-<div class="container min-vh-100 d-flex justify-content-center align-items-center">
-  <div class="card shadow-lg border-0 rounded-4 p-4" style="max-width: 600px; width: 100%; background-color: #1a1a2e;">
+<div
+  class="container min-vh-100 d-flex justify-content-center align-items-center"
+>
+  <div
+    class="card shadow-lg border-0 bg-dark rounded-4 p-4"
+    style="max-width: 600px; width: 100%"
+  >
     <div class="card-body">
       <p class="text-center mb-4 h1 text-warning">Register</p>
       <p class="text-center mb-4 h4 text-light">
@@ -85,7 +89,8 @@
         </button>
 
         <p class="text-center mt-4 text-light">
-          Already have an account? <a href="/login" class="text-decoration-none">Sign In</a>
+          Already have an account?
+          <a href="/login" class="text-decoration-none text-warning">Sign In</a>
         </p>
       </form>
     </div>

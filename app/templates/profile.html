@@ -5,16 +5,16 @@
     <!-- User Details Section -->
     <div class="col-md-5">
       <div
-        class="card text-light shadow-lg p-4"
-        style="background-color: #1a1a2e; border-radius: 15px"
+        class="card text-light bg-dark shadow-lg p-4"
+        style="border-radius: 15px"
       >
         <div class="text-center mb-3">
           <i
             class="bi bi-person-circle"
             style="font-size: 4rem; color: #ffcc00"
           ></i>
-            <h3 class="mt-2">Profile</h3>
-        
+          <h3 class="mt-2">Profile</h3>
+
           <p class="text-light">First Name: {{ user.first_name }}</p>
           <p class="text-light">Last Name: {{ user.last_name }}</p>
           <p class="text-light">Email: {{ user.email }}</p>
@@ -26,8 +26,8 @@
     <!-- Profile Update Form -->
     <div class="col-md-5">
       <div
-        class="card text-light shadow-lg p-4"
-        style="background-color: #1a1a2e; border-radius: 15px"
+        class="card text-light bg-dark shadow-lg p-4"
+        style="border-radius: 15px"
       >
         <h4 class="text-center mb-3">Update Profile</h4>
         <form action="{{ url_for('update_profile') }}" method="POST">

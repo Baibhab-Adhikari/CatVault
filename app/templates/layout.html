@@ -48,11 +48,11 @@
         transform: scale(1.1);
       }
 
-      .card {
+      #card {
         transition: transform 0.3s ease, box-shadow 0.3s ease;
       }
 
-      .card:hover {
+      #card:hover {
         transform: scale(1.05);
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
       }
@@ -72,6 +72,14 @@
 
       #flash-messages:empty {
         display: none !important;
+      }
+      #themeToggle {
+        cursor: pointer; /* Make the label clickable */
+      }
+
+      #themeIcon {
+        font-size: 1.2rem; /* Adjust the icon size */
+        user-select: none; /* Prevent text selection */
       }
     </style>
 
@@ -114,16 +122,15 @@
             <li class="nav-item">
               <a href="/account" class="nav-link">Account</a>
             </li>
-            <!-- Dark/Light Mode Toggle Switch -->
+            <!-- dark/light mode toggle -->
             <li class="nav-item nav-link">
-              <div class="form-check form-switch">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  id="themeToggle"
-                />
-                <label class="form-check-label" for="themeToggle"></label>
-              </div>
+              <label
+                id="themeToggle"
+                class="form-check-label"
+                for="themeToggle"
+              >
+                <i id="themeIcon" class="bi"></i>
+              </label>
             </li>
           </ul>
         </div>
@@ -131,7 +138,11 @@
     </nav>
 
     <!-- Flask Flash Messages -->
-    <div class="flashes" id="flash-messages" style=" height: 70px; margin-top: 80px">
+    <div
+      class="flashes"
+      id="flash-messages"
+      style="height: 70px; margin-top: 80px"
+    >
       {% with messages = get_flashed_messages(with_categories=true) %} {% if
       messages %} {% for category, message in messages %}
       <div
@@ -229,34 +240,43 @@
         disable: "mobile",
       });
     </script>
-    <!-- dark and light Mode -->
+    <!-- Dark and Light Mode with Bootstrap Icons -->
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         const themeToggle = document.getElementById("themeToggle");
+        const themeIcon = document.getElementById("themeIcon");
         const htmlElement = document.documentElement;
 
         // Check for saved user preference in localStorage
         const savedTheme = localStorage.getItem("theme");
         if (savedTheme) {
           htmlElement.setAttribute("data-bs-theme", savedTheme);
-          themeToggle.checked = savedTheme === "dark";
+          updateIcon(savedTheme); // Update the icon based on the theme
         }
 
-        // Event listener for the toggle switch
-        themeToggle.addEventListener("change", function () {
-          if (this.checked) {
-            htmlElement.setAttribute("data-bs-theme", "dark");
-            localStorage.setItem("theme", "dark");
-          } else {
-            htmlElement.setAttribute("data-bs-theme", "light");
-            localStorage.setItem("theme", "light");
-          }
+        // Event listener for the icon toggle
+        themeToggle.addEventListener("click", function () {
+          const currentTheme = htmlElement.getAttribute("data-bs-theme");
+          const newTheme = currentTheme === "dark" ? "light" : "dark";
+          htmlElement.setAttribute("data-bs-theme", newTheme);
+          localStorage.setItem("theme", newTheme);
+          updateIcon(newTheme); // Update the icon when the theme changes
         });
+
+        // Function to update the icon based on the current theme
+        function updateIcon(theme) {
+          if (theme === "dark") {
+            themeIcon.classList.remove("bi-sun");
+            themeIcon.classList.add("bi-moon");
+          } else {
+            themeIcon.classList.remove("bi-moon");
+            themeIcon.classList.add("bi-sun");
+          }
+        }
       });
     </script>
 
     {# custom script#}
     <script src="/static/script.js"></script>
-    
   </body>
 </html>

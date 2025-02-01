@@ -1,16 +1,21 @@
 from flask import redirect, session
 from typing import Tuple, Union
+
+import app
 from app import bcrypt
 from functools import wraps
 import secrets
 import string
 import re
 from app import cipher_suite
+from itsdangerous import URLSafeTimedSerializer
+from config import Config
 
 
 # login required decorator
 def login_required(f):
     """ decoration of routes to enforce login for the user"""
+
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if session.get("user_id") is None:
@@ -59,6 +64,7 @@ def generate_password(length, uppercase, lowercase, numbers, symbols) -> str:
 
     return "".join(secrets.choice(characters_pool) for _ in range(int(length)))
 
+
 # password encryption for the password manager route
 
 
@@ -70,3 +76,19 @@ def encrypt_password(password: str) -> str:
 def decrypt_password(encrypted_password: str) -> str:
     """decrypts the password"""
     return cipher_suite.decrypt(encrypted_password.encode('utf-8')).decode('utf-8')
+
+
+def generate_token(email: str) -> str:
+    """generates a token for the user"""
+    serializer = URLSafeTimedSerializer(Config.SECRET_KEY)
+    return serializer.dumps(email, salt='password-reset-salt')
+
+
+def verify_token(token: str, expiration: int = 3600) -> str | None:
+    serializer = URLSafeTimedSerializer(Config.SECRET_KEY)
+    try:
+        email = serializer.loads(
+            token, salt='password-reset-salt', max_age=expiration)
+        return email
+    except Exception as e:
+        return None

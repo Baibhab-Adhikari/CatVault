@@ -1,19 +1,19 @@
-from typing import Union, Tuple
+from typing import Union, Tuple, Optional, Any
 
-from flask import render_template, request, redirect, session, jsonify, flash, url_for
-from flask.wrappers import Response
+from flask import render_template, request, redirect, session, jsonify, flash, url_for, Response
+from werkzeug.wrappers import Response as WerkzeugResponse
 from flask_mail import Message  # type: ignore
 from sqlalchemy import text
 from sqlalchemy.exc import IntegrityError
 
 from app import mail  # type: ignore
-from app.helpers import login_required, hash_password, check_password, check_email, generate_password, decrypt_password, encrypt_password  # type: ignore
+from app.helpers import *  # type: ignore
 from app.models import Users, Manager, Contact  # type: ignore
 
 
 def register_routes(app, db):
     @app.errorhandler(404)
-    def page_not_found(e):
+    def page_not_found(e: Exception) -> Tuple[str, int]:
         """404 error handler"""
         return render_template('404.html'), 404
 
@@ -24,7 +24,7 @@ def register_routes(app, db):
         return render_template("index.html")
 
     @app.route("/register", methods=["GET", "POST"])
-    def register() -> Union[str, tuple[str, int], Response]:  # type: ignore
+    def register() -> Union[str, tuple[str, int], WerkzeugResponse]:  # type: ignore
         """Registration for new user"""
 
         # for GET:
@@ -35,29 +35,30 @@ def register_routes(app, db):
         elif request.method == "POST":
 
             # Variables to store info
-            first_name: Union[str, None] = request.form.get("firstname")
-            last_name: Union[str, None] = request.form.get("lastname")
-            email: Union[str, None] = request.form.get("email")
-            password: Union[str, None] = request.form.get("password")
-            confirm_password: Union[str, None] = request.form.get(
+            first_name: Optional[str] = request.form.get("firstname")
+            last_name: Optional[str] = request.form.get("lastname")
+            email: Optional[str] = request.form.get("email")
+            password: Optional[str] = request.form.get("password")
+            confirm_password: Optional[str] = request.form.get(
                 "confirmpassword")
 
             # Input validation
             if not first_name or not last_name or not email:
                 flash("Please fill in all fields!", 'danger')
+                return redirect("/register")
 
             # Password validation
             if not password or not confirm_password:
                 flash("Please enter a password!", 'danger')
-
+                return redirect("/register")
             # Check if the passwords match
             if password != confirm_password:
                 flash("Passwords do not match!", 'danger')
-
+                return redirect("/register")
             # email validation
             if not check_email(email):  # type: ignore
                 flash("Please enter a valid email address!", 'danger')
-
+                return redirect("/register")
             # hash the password
             hashed_pw: str = hash_password(password)  # type: ignore
 
@@ -90,8 +91,8 @@ def register_routes(app, db):
         if request.method == "POST":
 
             # variables to store form data
-            email: Union[str, None] = request.form.get("email")
-            password: Union[str, None] = request.form.get("password")
+            email: Optional[str] = request.form.get("email")
+            password: Optional[str] = request.form.get("password")
 
             # input validation
 
@@ -215,7 +216,8 @@ def register_routes(app, db):
                 password_id = request.form.get("id")
                 new_password = request.form.get("password")
 
-                entry = Manager.query.filter_by(id=password_id, user_email=user_email).first()
+                entry = Manager.query.filter_by(
+                    id=password_id, user_email=user_email).first()
                 if entry:
                     entry.password = encrypt_password(new_password)
                     db.session.commit()
@@ -227,7 +229,8 @@ def register_routes(app, db):
             elif "delete" in request.form:
                 password_id = request.form.get("id")
 
-                entry = Manager.query.filter_by(id=password_id, user_email=user_email).first()
+                entry = Manager.query.filter_by(
+                    id=password_id, user_email=user_email).first()
                 if entry:
                     db.session.delete(entry)
                     db.session.commit()
@@ -400,3 +403,73 @@ def register_routes(app, db):
             db.session.rollback()
             flash(f"Error: {str(e)}", 'danger')
             return redirect("/profile")
+
+    # forgot password route
+
+    @app.route('/forgot_password', methods=["GET", "POST"])
+    def forgot_password() -> Any:
+        """Route for requesting password reset link"""
+
+        if request.method == 'POST':
+            # get email and fetch user by email
+            email = request.form.get('email')
+            user: Optional[Users] = Users.query.filter_by(email=email).first()
+
+            if user:
+                token: str = generate_token(user.email)
+                reset_link: str = url_for(
+                    'reset_password', token=token, _external=True)
+
+                # sending the email
+                msg: Message = Message('Password Reset Request',
+                                       sender=Config.MAIL_USERNAME, recipients=[user.email])
+
+                msg.body = f"Click the link to reset your password: {
+                    reset_link}"
+                mail.send(msg)
+
+                flash("Password reset link sent to your email!", 'info')
+
+            else:
+                flash("No account found with this email!", 'danger')
+        return render_template('forgot_password.html')
+
+    # reset password route
+
+    @app.route('/reset_password/<token>', methods=['GET', 'POST'])
+    def reset_password(token: str) -> Any:
+        email = verify_token(token)
+        if email is None:
+            flash('Invalid or expired token.', 'danger')
+            return redirect(url_for('forgot_password'))
+
+        if request.method == 'POST':
+            new_password: Optional[str] = request.form.get('password')
+            confirm_password: Optional[str] = request.form.get(
+                'confirm_password')
+
+            # Ensure both fields are filled in
+            if not new_password or not confirm_password:
+                flash("Please fill in both password fields.", "danger")
+                return redirect(url_for('reset_password', token=token))
+
+            if new_password != confirm_password:
+                flash("Passwords do not match!", "danger")
+                return redirect(url_for('reset_password', token=token))
+
+            user: Optional[Users] = Users.query.filter_by(email=email).first()
+            if user:
+                try:
+                    user.hashed_password = hash_password(new_password)
+                    db.session.commit()
+                    flash('Password updated successfully!', 'success')
+                    return redirect(url_for('login'))
+                except Exception as e:
+                    db.session.rollback()
+                    flash("An error occurred while updating your password.", "danger")
+                    return redirect(url_for('reset_password', token=token))
+            else:
+                flash("User not found.", "danger")
+                return redirect(url_for('forgot_password'))
+
+        return render_template("reset_password.html", token=token)
