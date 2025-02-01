@@ -138,7 +138,7 @@ Refer to `requirements.txt` for a complete list.
 1. **Homepage**  
    ![Homepage](/screenshots/home.png)
 2. **Account Dashboard**  
-   ![Login Page](/screenshots/account.png)
+   ![Account](/screenshots/account.png)
 3. **Dashboard with Password Management**  
    ![Dashboard](/screenshots/manager.png)
 4. **Password Generator Interface**  
