@@ -16,10 +16,10 @@ class Config:
     SESSION_PERMANENT = False
     SESSION_USE_SIGNER = True
 
-    uri = os.getenv("DATABASE_URI")
+    uri = os.getenv("DATABASE_URL")
     if uri.startswith("postgres://"):  # type: ignore
         uri = uri.replace("postgres://", "postgresql://", 1)  # type: ignore
-    SQLALCHEMY_DATABASE_URI = uri
+    SQLALCHEMY_DATABASE_URI = uri  # type: ignore
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # Session configuration using Redis
