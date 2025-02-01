@@ -1,9 +1,5 @@
 import os
-
-from dotenv import load_dotenv
-
-# load environment variables from .env file
-load_dotenv()
+import redis
 
 
 # app config class
@@ -11,14 +7,25 @@ load_dotenv()
 
 class Config:
     """Configuration class for the flask application"""
+
     SECRET_KEY = os.getenv(
         "SECRET_KEY", "hello")  # used hello as fallback default key
+
     ENCRYPTION_KEY = os.getenv("ENCRYPTION_KEY")
-    SESSION_TYPE = "filesystem"  # for dev purpose
+    SESSION_TYPE = "redis"  # heroku redis for deployment
     SESSION_PERMANENT = False
     SESSION_USE_SIGNER = True
-    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URI")
+
+    uri = os.getenv("DATABASE_URI")
+    if uri.startswith("postgres://"):  # type: ignore
+        uri = uri.replace("postgres://", "postgresql://", 1)  # type: ignore
+    SQLALCHEMY_DATABASE_URI = uri
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+    # Session configuration using Redis
+    SESSION_TYPE = "redis"
+    SESSION_REDIS = redis.from_url(
+        os.getenv("REDIS_URL"), ssl_cert_reqs=None)  # type: ignore
 
     # mail server configuration
     MAIL_SERVER = 'smtp.gmail.com'
