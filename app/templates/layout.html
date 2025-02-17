@@ -247,35 +247,38 @@
         const themeIcon = document.getElementById("themeIcon");
         const htmlElement = document.documentElement;
 
-        // Check for saved user preference in localStorage
-        const savedTheme = localStorage.getItem("theme");
-        if (savedTheme) {
-          htmlElement.setAttribute("data-bs-theme", savedTheme);
-          updateIcon(savedTheme); // Update the icon based on the theme
-        }
-
-        // Event listener for the icon toggle
-        themeToggle.addEventListener("click", function () {
-          const currentTheme = htmlElement.getAttribute("data-bs-theme");
-          const newTheme = currentTheme === "dark" ? "light" : "dark";
-          htmlElement.setAttribute("data-bs-theme", newTheme);
-          localStorage.setItem("theme", newTheme);
-          updateIcon(newTheme); // Update the icon when the theme changes
-        });
-
-        // Function to update the icon based on the current theme
-        function updateIcon(theme) {
-          if (theme === "dark") {
-            themeIcon.classList.remove("bi-sun");
-            themeIcon.classList.add("bi-moon");
-          } else {
-            themeIcon.classList.remove("bi-moon");
-            themeIcon.classList.add("bi-sun");
+        if (themeToggle && themeIcon) {
+          // Check for saved user preference in localStorage
+          const savedTheme = localStorage.getItem("theme");
+          if (savedTheme) {
+            htmlElement.setAttribute("data-bs-theme", savedTheme);
+            updateIcon(savedTheme); // Update the icon based on the theme
           }
+
+          // Event listener for the icon toggle
+          themeToggle.addEventListener("click", function () {
+            const currentTheme = htmlElement.getAttribute("data-bs-theme");
+            const newTheme = currentTheme === "dark" ? "light" : "dark";
+            htmlElement.setAttribute("data-bs-theme", newTheme);
+            localStorage.setItem("theme", newTheme);
+            updateIcon(newTheme); // Update the icon when the theme changes
+          });
+
+          // Function to update the icon based on the current theme
+          function updateIcon(theme) {
+            if (theme === "dark") {
+              themeIcon.classList.remove("bi-sun");
+              themeIcon.classList.add("bi-moon");
+            } else {
+              themeIcon.classList.remove("bi-moon");
+              themeIcon.classList.add("bi-sun");
+            }
+          }
+        } else {
+          console.error("Theme toggle or icon element not found in the DOM.");
         }
       });
     </script>
-
     {# custom script#}
     <script src="/static/script.js"></script>
   </body>
